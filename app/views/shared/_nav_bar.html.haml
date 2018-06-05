@@ -6,6 +6,14 @@
 
   %ul#user_menu.navbar-nav.px-3
     %li
+      = button_to [ :dashboard, current_user], method: :patch, params: { user: { locale: "en" }}, class: "btn btn-outline-light", id: "btn-en", disabled: current_user.en? do
+        Eng
+        = image_tag "en-flag.png"
+    %li
+      = button_to [ :dashboard, current_user], method: :patch, params: { user: { locale: "km" }}, class: "btn btn-outline-light", id:"btn-km", disabled: current_user.km? do
+        ខែ្មរ
+        = image_tag "km-flag.png"
+    %li
       %span.oi.oi-person{"aria-hidden" => "true", :title => "person"}
       .btn-group
         %button.btn.btn-secondary.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}

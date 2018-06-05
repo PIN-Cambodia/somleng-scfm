@@ -13,6 +13,22 @@ RSpec.describe "Users" do
     end
   end
 
+  it "can update user locale" do
+    user = create(:user)
+
+    sign_in(user)
+    visit dashboard_root_path
+
+    expect(page).to have_content("Eng")
+    expect(page).to have_content("ខែ្មរ")
+
+    click_button("ខែ្មរ")
+
+    expect(page).to have_content("តេចេញ")
+    user.reload
+    expect(user.locale).to eq "km"
+  end
+
   it "can list all users" do
     user = create(:admin)
     other_user = create(:user, account: user.account)

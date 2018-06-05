@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include MetadataHelpers
 
+  enum locale: %i[en km]
   store_accessor :metadata, :location_ids
 
   # Include default devise modules. Others available are:
