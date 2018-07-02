@@ -3,7 +3,8 @@ services:
   db:
     image: postgres
   somleng-scfm:
-    image: dwilkie/somleng-scfm
+    build:
+      context: .
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     environment:
       - RAILS_ENV=development
