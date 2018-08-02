@@ -10,9 +10,10 @@ RSpec.describe "home" do
     )
 
     within("#top_nav") do
-      expect(page).to have_link("About Us", href: "#")
-      expect(page).to have_link("Contact", href: "#")
-      expect(page).to have_link("Dashboard", href: dashboard_root_path)
+      expect(page).to have_link("Sensor Map", href: "/")
+      expect(page).to have_link("About Us", href: about_path)
+      expect(page).to have_link("Contact", href: contact_path)
+      expect(page).to have_link("Login", href: dashboard_root_path)
     end
   end
 end

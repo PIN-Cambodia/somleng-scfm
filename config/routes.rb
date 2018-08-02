@@ -11,6 +11,8 @@ Rails.application.routes.draw do
              skip: :registrations
 
   root "home#index"
+  get "about", to: "home#about", as: "about"
+  get "contact", to: "home#contact", as: "contact"
 
   get "dashboard", to: "dashboard/callouts#index", as: :user_root
 
