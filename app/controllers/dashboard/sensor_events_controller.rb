@@ -1,6 +1,4 @@
 class Dashboard::SensorEventsController < Dashboard::AdminController
-  helper_method :parent_show_path
-
   private
 
   def association_chain
@@ -33,9 +31,5 @@ class Dashboard::SensorEventsController < Dashboard::AdminController
 
   def sensor_rule
     @sensor_rule ||= current_account.sensor_rules.find(sensor_rule_id)
-  end
-
-  def parent_show_path
-    polymorphic_path([:dashboard, parent]) if parent
   end
 end
