@@ -53,7 +53,7 @@ class ApplicationSeeder
       account.save!
     end
 
-    account.access_tokens.first_or_create!(created_by: account)
+    account.access_tokens.first_or_create!(created_by: account, permissions: %i[accounts_write access_tokens_write users_write])
 
     account
   end

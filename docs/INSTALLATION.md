@@ -45,8 +45,8 @@ Using our Super Admin account we will now use the API to create a normal user ac
 
 Run the following command:
 
-    $ ACCOUNT_ID=$(docker-compose run --rm -e SUPER_ADMIN_ACCESS_TOKEN=$SUPER_ADMIN_ACCESS_TOKEN curl /bin/sh -c 'curl -s -XPOST http://somleng-scfm:3000/api/accounts -u $SUPER_ADMIN_ACCESS_TOKEN: | jq -r -M ".id"')
-    $ echo $ACCOUNT_ID
+    ACCOUNT_ID=$(docker-compose run --rm -e SUPER_ADMIN_ACCESS_TOKEN=$SUPER_ADMIN_ACCESS_TOKEN curl /bin/sh -c 'curl -s -XPOST http://somleng-scfm:3000/api/accounts -u $SUPER_ADMIN_ACCESS_TOKEN: | jq -r -M ".id"')
+    echo $ACCOUNT_ID
 
 If all goes well should see your user account id. E.g. `2`
 
@@ -56,8 +56,8 @@ Now that we have our user account we need to create an access token in order to 
 
 Run the following command:
 
-    $ ACCESS_TOKEN=$(docker-compose run --rm -e SUPER_ADMIN_ACCESS_TOKEN=$SUPER_ADMIN_ACCESS_TOKEN -e ACCOUNT_ID=$ACCOUNT_ID curl /bin/sh -c 'curl -s -XPOST http://somleng-scfm:3000/api/access_tokens -d "account_id=$ACCOUNT_ID" -u $SUPER_ADMIN_ACCESS_TOKEN: | jq -r -M ".token"')
-    $ echo $ACCESS_TOKEN
+    ACCESS_TOKEN=$(docker-compose run --rm -e SUPER_ADMIN_ACCESS_TOKEN=$SUPER_ADMIN_ACCESS_TOKEN -e ACCOUNT_ID=$ACCOUNT_ID curl /bin/sh -c 'curl -s -XPOST http://somleng-scfm:3000/api/access_tokens -d "account_id=$ACCOUNT_ID" -u $SUPER_ADMIN_ACCESS_TOKEN: | jq -r -M ".token"')
+    echo $ACCESS_TOKEN
 
 You should see your access token. E.g. `4705e06c2977e12bed7ff8f24296aeb804fc7037213c4e09ed21d770608e6a40`
 
@@ -69,6 +69,10 @@ Now that we our user account and access token, let's go ahead and create a user 
 
 Run the following command:
 
-    $ docker-compose run --rm -e ACCESS_TOKEN=$ACCESS_TOKEN curl /bin/sh -c 'curl -s -XPOST http://somleng-scfm:3000/api/users -d "email=tiadmin@peopleinneed.cz" -d "password=secret1234" -u $ACCESS_TOKEN: | jq'
+    docker-compose run --rm -e ACCESS_TOKEN=$SUPER_ADMIN_ACCESS_TOKEN curl /bin/sh -c 'curl -s -XPOST http://somleng-scfm:3000/api/users -d "email=tiadmin@peopleinneed.cz" -d "password=secret1234" -u $ACCESS_TOKEN: | jq'
+
+Note down the user id returned here, and then run the following command to make that user an admin (replace id=1 with the proper id):
+
+    docker-compose exec db psql -U postgres somleng_scfm_development -c 'update users set roles=3 where id=1'
 
 You should be able to now sign in at <http://localhost:3000> with the email and password that you used in the request above.
