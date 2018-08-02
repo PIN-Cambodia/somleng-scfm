@@ -2,10 +2,10 @@ require "rails_helper"
 
 RSpec.describe "Callouts", :aggregate_failures do
   it "can list callouts" do
-    user           = create(:user)
-    callout        = create(:callout, :initialized, account: user.account)
-    paused_callout = create(:callout, status: Callout::STATE_PAUSED, account: user.account)
-    other_callout  = create(:callout)
+    user = create(:user)
+    sensor_event = create_sensor_event(account: user.account)
+    callout = create(:callout, :initialized, sensor_event: sensor_event, account: user.account)
+    other_callout = create(:callout)
 
     sign_in(user)
     visit dashboard_callouts_path
@@ -28,7 +28,11 @@ RSpec.describe "Callouts", :aggregate_failures do
       )
       expect(page).to have_sortable_column("status")
       expect(page).to have_sortable_column("created_at")
+      expect(page).not_to have_sortable_column("province")
+      expect(page).not_to have_sortable_column("trigger_method")
+      expect(page).to have_content("Trigger")
       expect(page).to have_content("Initialized")
+      expect(page).to have_content("Sensor Event")
       expect(page).to have_content(callout.province_name_en)
       expect(page).to have_content(callout.province_name_km)
     end
@@ -55,7 +59,16 @@ RSpec.describe "Callouts", :aggregate_failures do
     expect(new_callout.call_flow_logic).to eq(CallFlowLogic::PlayMessage.to_s)
     callout_population = new_callout.callout_population
     expect(callout_population).to be_present
-    expect(callout_population.contact_filter_metadata[:commune_id]).to eq(new_callout.commune_ids)
+    expect(callout_population.contact_filter_params[:has_locations_in]).to eq(new_callout.commune_ids)
+  end
+
+  it "autoselects the user's province" do
+    user = create(:user, province_ids: ["01"])
+
+    sign_in(user)
+    visit new_dashboard_callout_path
+
+    expect(find_field("callout_province_id", visible: false)["data-default-value"]).to eq("01")
   end
 
   it "can update a callout", :js do
@@ -77,7 +90,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     expect(page).to have_text("Callout was successfully updated.")
 
     callout.reload
-    expect(callout.callout_population.contact_filter_metadata[:commune_id]).to eq(callout.commune_ids)
+    expect(callout.callout_population.contact_filter_params[:has_locations_in]).to eq(callout.commune_ids)
   end
 
   it "can update a callout without an existing callout population", :js do
@@ -95,15 +108,17 @@ RSpec.describe "Callouts", :aggregate_failures do
     expect(page).to have_text("Callout was successfully updated.")
 
     callout.reload
-    expect(callout.callout_population.contact_filter_metadata[:commune_id]).to eq(callout.commune_ids)
+    expect(callout.callout_population.contact_filter_params[:has_locations_in]).to eq(callout.commune_ids)
   end
 
   it "can show a callout" do
     user = create(:admin)
+    sensor_event = create_sensor_event(account: user.account)
     callout = create(
       :callout,
       :initialized,
       account: user.account,
+      sensor_event: sensor_event,
       call_flow_logic: CallFlowLogic::HelloWorld,
       audio_file: "test.mp3",
       audio_url: "https://example.com/audio.mp3"
@@ -144,6 +159,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     within("#callout") do
       expect(page).to have_content(callout.id)
       expect(page).to have_link(callout.audio_url, href: callout.audio_url)
+      expect(page).to have_link(callout.sensor_event_id, href: dashboard_sensor_event_path(sensor_event))
       expect(page).to have_content("Status")
       expect(page).to have_content("Initialized")
       expect(page).to have_content("Created at")
