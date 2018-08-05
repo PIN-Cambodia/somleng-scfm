@@ -1,13 +1,14 @@
 DashboardCallout = function () {
-  _this = this;
-  _this.provinceCss = '.js-select-province';
-  _this.$districtsCommunes = $('#districts-communes');
-  _this.firstLoad = true;
+  var firstLoad = true;
+  var provinceCss = '.js-select-province';
+  var districtsCommunes = '#districts-communes';
+  var allCommunesSelector = '.js-select-all-communes';
+  var namelocale = (($('html').attr('lang') == 'km') ? 'name_km' : 'name_en');
 
-  province = new PumiSelectize(_this.provinceCss);
+  province = new PumiSelectize(provinceCss);
 
   onProvinceChange = function () {
-    $(_this.provinceCss).on('change', function () {
+    $(provinceCss).on('change', function () {
       params = '?province_id=' + this.value;
       districtUrl = $(this).data('pumiDistrictCollectionUrl') + params;
       communeUrl = $(this).data('pumiCommuneCollectionUrl') + params;
@@ -21,9 +22,9 @@ DashboardCallout = function () {
         getCommunes.then(function (communes) {
           buildCommunes(communes);
         }).done(function () {
-          if (_this.firstLoad) {
+          if (firstLoad) {
             checkCommunes(communeIds);
-            _this.firstLoad = false;
+            firstLoad = false;
           }
         });
       });
@@ -38,9 +39,9 @@ DashboardCallout = function () {
   };
 
   buildDistricts = function (districts) {
-    _this.$districtsCommunes.html('');
+    $(districtsCommunes).html('');
     $.each(districts, function (index, district) {
-      _this.$districtsCommunes.append(pumiCheckbox('district', district));
+      $(districtsCommunes).append(pumiCheckbox('district', district));
     });
   };
 
@@ -52,13 +53,16 @@ DashboardCallout = function () {
   };
 
   pumiCheckbox = function (type, object) {
-    return '<div class="form-check">' +
+    var inputTag = '<div class="form-check">' +
     '<input class="form-check-input ' + type + '-ids" type="checkbox" ' +
     'value=' + object.id + ' name="callout[' + type + '_ids][]" ' +
-    'id="callout_' + type + '_' + object.id + '">' +
-    '<label class="string optional form-check-label"' +
+    'id="callout_' + type + '_' + object.id + '">';
+
+    var labelTag = '<label class="string optional form-check-label"' +
     'for="callout_' + type + '_' + object.id + '">'
-    + object.name_km + '&nbsp;(' + object.name_en + ')</label></div>';
+    + object[namelocale] + '</label></div>';
+
+    return inputTag + labelTag;
   };
 
   onCheckDistrict = function () {
@@ -68,12 +72,13 @@ DashboardCallout = function () {
         $children.prop('checked', true);
       } else {
         $children.prop('checked', false);
+        $(allCommunesSelector).prop('checked', false);
       }
     });
   };
 
   onCommuneCheckboxChange = function () {
-    _this.$districtsCommunes.on('change', '.commune-ids', function () {
+    $(districtsCommunes).on('change', '.commune-ids', function () {
       var $district = findDistrictOf($(this).val());
 
       if ($(this).is(':checked')) {
@@ -82,6 +87,8 @@ DashboardCallout = function () {
         if ($district.parent().find('.commune-ids:checked').length == 0) {
           $district.prop('checked', false);
         }
+
+        $(allCommunesSelector).prop('checked', false);
       }
     });
   };
@@ -90,11 +97,22 @@ DashboardCallout = function () {
     return $('#callout_district_' + communeId.slice(0, 4));
   };
 
+  onSelectAllCommunes = function () {
+    $(allCommunesSelector).on('change', function () {
+      if ($(this).is(':checked')) {
+        $('#districts-communes .form-check-input').prop('checked', true);
+      } else {
+        $('#districts-communes .form-check-input').prop('checked', false);
+      }
+    });
+  };
+
   this.init = function () {
     province.init();
     onProvinceChange();
     onCheckDistrict();
     onCommuneCheckboxChange();
+    onSelectAllCommunes();
   };
 };
 

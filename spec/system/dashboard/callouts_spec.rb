@@ -34,7 +34,6 @@ RSpec.describe "Callouts", :aggregate_failures do
       expect(page).to have_content("Initialized")
       expect(page).to have_content("Sensor Event")
       expect(page).to have_content(callout.province_name_en)
-      expect(page).to have_content(callout.province_name_km)
     end
   end
 
@@ -236,7 +235,7 @@ RSpec.describe "Callouts", :aggregate_failures do
 
   def select_commune
     select_selectize("#province", "Battambang")
-    check("Kantueu Pir")
+    check("Select All")
     expect(page).not_to have_content("Mongkol Borei")
   end
 end

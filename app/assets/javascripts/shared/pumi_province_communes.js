@@ -1,18 +1,18 @@
 PumiProvinceCommunes = function () {
-
-  _this = this;
-  _this.$province = $('.js-select-province');
-  _this.$communes = $('.js-select-communes');
-  _this.districts = [];
-  _this.communes = [];
-  _this.communeIds = _this.$communes.data('defaultValue') || [];
-  _this.provinceId = _this.$province.data('defaultValue');
+  var $province = $('.js-select-province');
+  var $communes = $('.js-select-communes');
+  var districts = [];
+  var communes = [];
+  var communeIds = $communes.data('defaultValue') || [];
+  var provinceId = $province.data('defaultValue');
+  var namelocale = (($('html').attr('lang') == 'km') ? 'name_km' : 'name_en');
 
   initSelectProvince = function () {
-    _this.$province.selectize({
+    $province.selectize({
       valueField: 'id',
       preload: true,
       searchField: ['name_en', 'name_km'],
+      placeholder: $province.data('placeholder'),
       render: {
         item: renderItem,
         option: renderOption,
@@ -21,30 +21,31 @@ PumiProvinceCommunes = function () {
       onChange: getdistrictsCommunes,
     });
 
-    _this.provincetize = _this.$province[0].selectize;
+    provincetize = $province[0].selectize;
   };
 
   loadProvinces = function (query, callback) {
     $.when(
-      $.getJSON(_this.$province.data('provinceUrl'), function (data) {
+      $.getJSON($province.data('provinceUrl'), function (data) {
         callback(data);
       })
     ).done(function () {
-      if (_this.provinceId) {
-        _this.provincetize.setValue(_this.provinceId);
-        _this.provinceId = null;
+      if (provinceId) {
+        provincetize.setValue(provinceId);
+        provinceId = null;
       }
     });
   };
 
   initSelectCommunes = function () {
-    _this.$communes.selectize({
+    $communes.selectize({
       options: [],
       optgroups: [],
       valueField: 'id',
       optgroupField: 'district_id',
       optgroupValueField: 'id',
       searchField: ['name_en', 'name_km'],
+      placeholder: $communes.data('placeholder'),
       closeAfterSelect: true,
       render: {
         optgroup_header: renderOptGroupHeader,
@@ -54,7 +55,7 @@ PumiProvinceCommunes = function () {
       onChange: updateCommuneIds,
     });
 
-    _this.communestize = _this.$communes[0].selectize;
+    communestize = $communes[0].selectize;
   };
 
   updateCommuneIds = function (value) {
@@ -68,84 +69,78 @@ PumiProvinceCommunes = function () {
     ).done(function (data) {
       comparation = $(value).not(newValue).length === 0 && $(newValue).not(value).length === 0;
       if (!comparation) {
-        _this.communestize.setValue(newValue);
+        communestize.setValue(newValue);
       }
     });
   };
 
   renderOptGroupHeader = function (item, escape) {
+    var label = item[namelocale];
     return '<div data-selectable data-value="' +
       escape(item.commune_ids) + '" class="optgroup-header">' +
-      escape(item.name_km) + ' <span>&nbsp;(' +
-      escape(item.name_en) + ')</span></div>';
+      escape(label) + '</div>';
   };
 
   renderItem = function (item, escape) {
-    return '<div>' + (item.name_km ? '<span>' +
-      escape(item.name_km) + '&nbsp;</span>' : '') +
-      (item.name_en ? '<span>(' + escape(item.name_en) +
-      ')</span>' : '') + '</div>';
+    var label = item[namelocale];
+    return '<div><span class="khmer">' + escape(label) + '</span></div>';
   };
 
   renderOption = function (item, escape) {
-    var label = item.name_km;
-    var caption = item.name_en;
-    return '<div>' +
-        '<span class="label">' + escape(label) + '</span></br>' +
-        (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') +
-    '</div>';
+    var label = item[namelocale];
+    return '<div><span class="label">' + escape(label) + '</span></div>';
   };
 
   getdistrictsCommunes = function (provinceId) {
     params = '?province_id=' + provinceId;
-    districtUrl = _this.$province.data('pumiDistrictCollectionUrl') + params;
-    communeUrl = _this.$province.data('pumiCommuneCollectionUrl') + params;
+    districtUrl = $province.data('pumiDistrictCollectionUrl') + params;
+    communeUrl = $province.data('pumiCommuneCollectionUrl') + params;
 
     request = $.getJSON(districtUrl);
     chained = request.then(function (data) {
-      _this.districts = data;
+      districts = data;
       return $.getJSON(communeUrl);
     });
 
     chained.done(function (data) {
-      _this.communes = data;
-      _this.communestize.clearOptions();
-      _this.communestize.clearOptionGroups();
+      communes = data;
+      communestize.clearOptions();
+      communestize.clearOptionGroups();
       $.when(
         mapDistrictCommune()
       ).then(function () {
-        $.each(_this.districts, function (index, district) {
-          _this.communestize.addOptionGroup(district.id, district);
+        $.each(districts, function (index, district) {
+          communestize.addOptionGroup(district.id, district);
         });
 
-        _this.communestize.addOption(_this.communes);
+        communestize.addOption(communes);
       }).done(function () {
-        if (_this.communeIds.length) {
-          _this.communestize.setValue(_this.communeIds);
-          _this.communeIds = [];
+        if (communeIds.length) {
+          communestize.setValue(communeIds);
+          communeIds = [];
         }
       });
     });
   };
 
   mapDistrictCommune = function () {
-    $.each(_this.districts, function (index, district) {
+    $.each(districts, function (index, district) {
       $.when(
-        district.commune_ids = $.map(_this.communes, function (commune, index) {
+        district.commune_ids = $.map(communes, function (commune, index) {
           if (commune.id.slice(0, 4) === district.id) {
             commune.district_id = district.id;
             return commune.id;
           }
         })
       ).done(function (data) {
-        _this.communes.push({
+        communes.push({
           district: true, name_en: district.name_en,
           id: district.commune_ids, district_id: district.id,
         });
       });
     });
 
-    return _this.districts;
+    return districts;
   };
 
   this.init = function () {
