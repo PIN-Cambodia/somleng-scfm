@@ -162,3 +162,9 @@ tr[data-clickable-link] {
     font-size: 13px;
   }
 }
+
+@media (max-height: 768px) {
+  #districts-communes {
+    max-height: 150px;
+  }
+}
