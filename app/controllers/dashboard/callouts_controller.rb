@@ -1,4 +1,6 @@
 class Dashboard::CalloutsController < Dashboard::BaseController
+  helper_method :callout_summary
+
   private
 
   def prepare_resource_for_new
@@ -39,5 +41,9 @@ class Dashboard::CalloutsController < Dashboard::BaseController
 
   def contact_filter_params
     { has_locations_in: resource.commune_ids.reject(&:blank?) }
+  end
+
+  def callout_summary
+    @callout_summary ||= CalloutSummary.new(resource)
   end
 end

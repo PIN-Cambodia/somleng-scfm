@@ -23,6 +23,7 @@ en:
       delete: Delete
       edit: Edit
       preview: Preview
+      refresh: Refresh
       update: Edit
     admin_management: Admin
     app_name: EWS 1294
@@ -49,6 +50,7 @@ en:
       show: Callout %{id}
       start_callout: Start Callout
       stop_callout: Stop Callout
+      summary: Callout Summary
       update: Edit Callout
     contacts:
       create: New Contact

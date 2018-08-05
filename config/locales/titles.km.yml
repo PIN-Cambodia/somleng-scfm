@@ -23,6 +23,7 @@ km:
       delete: លុបចោល
       edit: កែប្រែ
       preview: ការឃើញជាមុន
+      refresh: Refresh
       update: កែប្រែ
     admin_management: Admin
     app_name: EWS 1294
@@ -49,6 +50,7 @@ km:
       show: សេចក្ដីប្រកាស %{id}
       start_callout: ចាប់ផ្ដើម
       stop_callout: បញ្ឈប់
+      summary: Callout Summary
       update: កែប្រែ សេចក្ដីប្រកាស
     contacts:
       create: បង្កើត សមាជិកទំនាក់ទំនង
