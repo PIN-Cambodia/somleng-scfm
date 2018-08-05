@@ -126,6 +126,10 @@ main {
   padding: 4px 8px;
 }
 
+tr[data-clickable-link] {
+  cursor: pointer;
+}
+
 @media (min-width: 768px) {
   #side_navigation.collapse {
     display: block;

@@ -117,6 +117,9 @@ DashboardCallout = function () {
 };
 
 $(document).on('turbolinks:load', function () {
+  clickableTableRow = new ClickableTableRow();
+  clickableTableRow.init();
+
   actions = ['new', 'create', 'edit', 'update'];
   if ((page.controller() !== 'callouts') || !actions.includes(page.action())) {
     return;

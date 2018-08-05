@@ -22,9 +22,8 @@ RSpec.describe "Callouts", :aggregate_failures do
       expect(page).to have_content_tag_for(callout)
       expect(page).not_to have_content_tag_for(other_callout)
       expect(page).to have_content("#")
-      expect(page).to have_link(
-        callout.id,
-        href: dashboard_callout_path(callout)
+      expect(page).to have_selector(
+        :css, "tr[data-clickable-link='#{dashboard_callout_path(callout)}']"
       )
       expect(page).to have_sortable_column("status")
       expect(page).to have_sortable_column("created_at")
