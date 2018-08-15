@@ -14,7 +14,7 @@ RSpec.describe "User sign in" do
     fill_in "Password", with: "mysecret"
     click_action_button(:create, key: :user_sessions)
 
-    expect(page).to have_text("Signed in successfully.")
+   expect(page).to have_text("Signed in successfully.")
     expect(current_path).to eq(user_root_path)
   end
 

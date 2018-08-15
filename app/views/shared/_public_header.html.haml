@@ -2,7 +2,7 @@
   .my-0.mr-md-auto.font-weight-normal
     = link_to root_path do
       %h5
-        = translate(:"titles.app_name")
+        = link_to image_tag  "logos.png", :class => "my_class",:width => '200',:high =>'200'
   %nav#top_nav.my-2.my-md-0.mr-md-3
     %a.p-2.text-dark{:href => "/"} Sensor Map
     %a.p-2.text-dark{:href => about_path} About Us

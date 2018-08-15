@@ -2,6 +2,9 @@ body {
   font-size: .875rem;
   color: #333;
 }
+.top-head{
+  background-color: #284270;
+}
 
 main {
   overflow-x: visible;
@@ -28,6 +31,10 @@ main {
  * Sidebar
  */
 
+.main-side{
+  background-color:#F4F4F4;
+
+}
 .sidebar {
   position: fixed;
   top: 0;
@@ -57,8 +64,14 @@ main {
   margin-right: 4px;
   color: #999;
 }
+.sidebar a:hover{
+  background-color:white;
+  
 
+  }
+ 
 .sidebar .nav-link.active {
+   background-color:#fff;
   color: #007bff;
 }
 
@@ -131,7 +144,7 @@ main {
     display: block;
   }
   .sidebar-sticky {
-    margin-top: 40px;
+    margin-top: 112px;
   }
 }
 
