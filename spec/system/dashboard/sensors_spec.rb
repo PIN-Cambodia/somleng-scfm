@@ -31,7 +31,6 @@ RSpec.describe "Sensors", :aggregate_failures do
         href: dashboard_sensor_path(sensor)
       )
       expect(page).to have_content("Kampong Chhnang")
-      expect(page).to have_content("កំពង់ឆ្នាំង")
     end
   end
 

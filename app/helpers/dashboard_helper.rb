@@ -1,16 +1,14 @@
 module DashboardHelper
-  def batch_operation_create_phone_calls_default_filter_params
-    default_batch_operation_filter_params = current_account.settings["batch_operation_phone_call_create_parameters"] || {}
-    callout_participation_filter_params = default_batch_operation_filter_params["callout_participation_filter_params"] || {}
-    callout_filter_params = default_batch_operation_filter_params.slice("callout_filter_params")
-    callout_participation_filter_params.merge(callout_filter_params).presence
-  end
-
   def location_names(province_ids, type)
     Array(province_ids).map do |location_id|
       location = type.find_by_id(location_id)
-      "#{location.name_km} (#{location.name_en})" if location
+      location_name(location)
     end.compact.join(", ")
+  end
+
+  def location_name(location)
+    return unless location
+    current_user.locale == "km" ? location.name_km : location.name_en
   end
 
   def callout_status_badge(callout)

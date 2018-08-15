@@ -22,9 +22,8 @@ RSpec.describe "Callouts", :aggregate_failures do
       expect(page).to have_content_tag_for(callout)
       expect(page).not_to have_content_tag_for(other_callout)
       expect(page).to have_content("#")
-      expect(page).to have_link(
-        callout.id,
-        href: dashboard_callout_path(callout)
+      expect(page).to have_selector(
+        :css, "tr[data-clickable-link='#{dashboard_callout_path(callout)}']"
       )
       expect(page).to have_sortable_column("status")
       expect(page).to have_sortable_column("created_at")
@@ -34,7 +33,6 @@ RSpec.describe "Callouts", :aggregate_failures do
       expect(page).to have_content("Initialized")
       expect(page).to have_content("Sensor Event")
       expect(page).to have_content(callout.province_name_en)
-      expect(page).to have_content(callout.province_name_km)
     end
   end
 
@@ -168,6 +166,18 @@ RSpec.describe "Callouts", :aggregate_failures do
       expect(page).to have_content("Call flow")
       expect(page).to have_content("Hello World")
     end
+
+    within("#callout_summary") do
+      expect(page).to have_content("Callout Summary")
+      expect(page).to have_link("Refresh", href: dashboard_callout_path(callout))
+      expect(page).to have_content("Participants")
+      expect(page).to have_content("Participants still to be called")
+      expect(page).to have_content("Completed calls")
+      expect(page).to have_content("Busy calls")
+      expect(page).to have_content("Not answered calls")
+      expect(page).to have_content("Failed calls")
+      expect(page).to have_content("Errored calls")
+    end
   end
 
   it "can start a callout" do
@@ -224,7 +234,7 @@ RSpec.describe "Callouts", :aggregate_failures do
 
   def select_commune
     select_selectize("#province", "Battambang")
-    check("Kantueu Pir")
+    check("Select All")
     expect(page).not_to have_content("Mongkol Borei")
   end
 end

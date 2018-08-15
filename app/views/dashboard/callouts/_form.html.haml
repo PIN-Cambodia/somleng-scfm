@@ -6,6 +6,7 @@
                 wrapper_html: { id: 'province' },
                 input_html: { class: 'js-select-province',
                   data: { filter_province_ids: current_user.province_ids,
+                    placeholder: translate(:"titles.actions.select"),
                     default_value: f.object.province_id || Array(current_user.province_ids).first,
                     default_commune_ids: f.object.commune_ids,
                     pumi_url: pumi.provinces_url,
@@ -14,6 +15,9 @@
                     pumi_commune_collection_url: pumi.communes_url }}
 
       = f.input :commune_ids, input_html: { name: "callout[commune_ids][]", value: '', class: 'd-none' }
+      %input#all-communes.js-select-all-communes{ type: 'checkbox' }
+      %label.form-check-label{ for: 'all-communes' }
+        = translate(:"titles.actions.select_all")
       #districts-communes
       = f.input :call_flow_logic, as: :hidden
       .form-group.actions

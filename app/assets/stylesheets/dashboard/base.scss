@@ -139,6 +139,10 @@ main {
   padding: 4px 8px;
 }
 
+tr[data-clickable-link] {
+  cursor: pointer;
+}
+
 @media (min-width: 768px) {
   #side_navigation.collapse {
     display: block;
@@ -148,6 +152,32 @@ main {
   }
 }
 
-.resources-filter {
-  min-height: 500px;
+@media (max-width: 768px) {
+  .col, [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .row {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  [class*="px-"] {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  .resources-filter {
+    min-height: 400px;
+  }
+
+  table tr {
+    line-height: 1;
+    font-size: 13px;
+  }
+}
+
+@media (max-height: 768px) {
+  #districts-communes {
+    max-height: 150px;
+  }
 }

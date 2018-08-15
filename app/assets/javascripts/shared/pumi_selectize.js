@@ -1,5 +1,6 @@
 PumiSelectize = function (element) {
-  filteredProvinceIds = $(element).data('filterProvinceIds');
+  var filteredProvinceIds = $(element).data('filterProvinceIds');
+  var namelocale = (($('html').attr('lang') == 'km') ? 'name_km' : 'name_en');
 
   loadData = function (selector, url) {
     $.when(
@@ -28,6 +29,7 @@ PumiSelectize = function (element) {
       valueField: 'id',
       searchField: ['name_en', 'name_km'],
       closeAfterSelect: false,
+      placeholder: $(element).data('placeholder'),
       render: {
         item: renderItem,
         option: renderOption,
@@ -38,19 +40,13 @@ PumiSelectize = function (element) {
   };
 
   renderItem = function (item, escape) {
-    return '<div>' + (item.name_km ? '<span class="khmer">' +
-      escape(item.name_km) + '&nbsp;</span>' : '') +
-      (item.name_en ? '<span class="english">(' + escape(item.name_en) +
-      ')</span>' : '') + '</div>';
+    var label = item[namelocale];
+    return '<div><span class="khmer">' + escape(label) + '</span></div>';
   };
 
   renderOption = function (item, escape) {
-    var label = item.name_km;
-    var caption = item.name_en;
-    return '<div>' +
-        '<span class="label">' + escape(label) + '</span></br>' +
-        (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') +
-    '</div>';
+    var label = item[namelocale];
+    return '<div><span class="label">' + escape(label) + '</span></div>';
   };
 
   this.init = function () {
