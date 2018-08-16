@@ -44,6 +44,8 @@ group :development, :test do
   gem "i18n-tasks"
   gem "pry"
   gem "rspec-rails"
+  gem "rubocop"
+  gem "rubocop-rspec"
 end
 
 group :development do
@@ -56,6 +58,7 @@ end
 
 group :test do
   gem "capybara"
+  gem "chromedriver-helper"
   gem "codecov", require: false
   gem "email_spec"
   gem "factory_bot_rails"
