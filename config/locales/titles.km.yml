@@ -28,7 +28,6 @@ km:
       select_all: ជ្រើស​យក​ទាំងអស់
       update: កែប្រែ
     admin_management: Admin
-    app_name: EWS 1294
     batch_operations:
       index: Batch Operations
       queue: ចាប់ផ្ដើម
