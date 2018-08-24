@@ -4,6 +4,22 @@ Somleng SCFM provides a REST API for managing core resources. Below is the full 
 
 Before we get started, follow the [Installation Guide](https://github.com/somleng/somleng-scfm/blob/master/docs/INSTALLATION.md) to install Somleng SCFM on your local machine.
 
+## Sorting
+
+SCFM follows the [JSON API recommendation for sorting](http://jsonapi.org/format/#fetching-sorting).
+
+For example, the following sorts accounts by `created_at` in ascending order.
+
+```http
+  GET /api/accounts?sort=created_at
+```
+
+To sort in descending order, prefix the sort param with minus `-`. E.g.
+
+```http
+  GET /api/accounts?sort=-created_at
+```
+
 ## Accounts
 
 ### Create
