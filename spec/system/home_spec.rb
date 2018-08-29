@@ -4,11 +4,6 @@ RSpec.describe "Landing Page" do
   it "has navigation links" do
     visit(root_path)
 
-    expect(page).to have_link(
-      I18n.translate!(:"titles.app_name"),
-      href: root_path
-    )
-
     within("#top_nav") do
       expect(page).to have_link("Sensor Map", href: root_path)
       expect(page).to have_link("About Us", href: about_path)

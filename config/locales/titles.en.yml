@@ -28,7 +28,6 @@ en:
       select_all: Select All
       update: Edit
     admin_management: Admin
-    app_name: EWS 1294
     batch_operations:
       index: Batch Operations
       queue: Start

@@ -126,7 +126,7 @@ module "scfm_eb_app_env" {
   # EC2 Settings
   security_groups      = ["${module.scfm_db.security_group}"]
   web_instance_type    = "t2.micro"
-  worker_instance_type = "t2.nano"
+  worker_instance_type = "t2.small"
   ec2_instance_role    = "${module.eb_iam.eb_ec2_instance_role}"
 
   # Elastic Beanstalk Environment

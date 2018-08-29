@@ -4,6 +4,22 @@ Somleng SCFM provides a REST API for managing core resources. Below is the full 
 
 Before we get started, follow the [Installation Guide](https://github.com/somleng/somleng-scfm/blob/master/docs/INSTALLATION.md) to install Somleng SCFM on your local machine.
 
+## Sorting
+
+SCFM follows the [JSON API recommendation for sorting](http://jsonapi.org/format/#fetching-sorting).
+
+For example, the following sorts accounts by `created_at` in ascending order.
+
+```http
+  GET /api/accounts?sort=created_at
+```
+
+To sort in descending order, prefix the sort param with minus `-`. E.g.
+
+```http
+  GET /api/accounts?sort=-created_at
+```
+
 ## Accounts
 
 ### Create
@@ -1641,3 +1657,182 @@ This can be run on a `BatchOperation::PhoneCallCreate`, `BatchOperation::PhoneCa
 Sample Response:
 
     < HTTP/1.1 204 No Content
+
+## Sensors
+
+### Create
+
+      $ curl -XPOST -d "metadata[commune_ids=120101]" -d "external_id=123456" /api/sensors
+
+Sample Response:
+
+```json
+{
+  "id": 2,
+  "metadata": {
+    "commune_ids": [
+      "120101"
+    ]
+  },
+  "account_id": 1,
+  "external_id": "123456",
+  "created_at": "2018-08-24T08:40:23.219+07:00",
+  "updated_at": "2018-08-24T08:40:23.219+07:00"
+}
+```
+
+### Update
+
+    $ curl -XPATCH -d "metadata[name]=My+Sensor" /api/sensors/2
+
+Sample Response:
+
+    < HTTP/1.1 204 No Content
+
+### Fetch
+
+      $ curl /api/sensors/2
+
+Sample Response:
+
+```json
+{
+  "id": 2,
+  "metadata": {
+    "name": "My Sensor",
+    "commune_ids": [
+      "120101"
+    ]
+  },
+  "account_id": 1,
+  "external_id": "123456",
+  "created_at": "2018-08-24T08:40:23.219+07:00",
+  "updated_at": "2018-08-24T08:47:40.334+07:00"
+}
+```
+
+### Index and Filter
+
+#### All Sensors
+
+      $ curl /api/sensors
+
+Sample Response:
+
+    < HTTP/1.1 200 OK
+    < Per-Page: 25
+    < Total: 2
+
+```json
+[
+  {
+    "id": 2,
+    "metadata": {
+      "name": "My Sensor",
+      "commune_ids": [
+        "120101"
+      ]
+    },
+    "account_id": 1,
+    "external_id": "123456",
+    "created_at": "2018-08-24T08:40:23.219+07:00",
+    "updated_at": "2018-08-24T08:47:40.334+07:00"
+  },
+  {
+    "id": 1,
+    "metadata": {
+      "latitude": "10",
+      "longitude": "10",
+      "commune_ids": [
+        "010201"
+      ],
+      "height_above_sea_level": "100"
+    },
+    "account_id": 1,
+    "external_id": "12345",
+    "created_at": "2018-06-23T14:36:50.429+07:00",
+    "updated_at": "2018-06-23T15:31:01.870+07:00"
+  }
+]
+```
+
+### Delete
+
+    $ curl -XDELETE /api/sensors/2
+
+Sample Response:
+
+    < HTTP/1.1 204 No Content
+
+## Sensor Events
+
+### Create
+
+    $ curl -XPOST -d "payload[level]=1000" -d "payload[sensor_id]=12345" -d "payload[voltage]=5" /api/sensors/sensor_events
+
+Sample Response:
+
+```json
+{
+  "id": 1,
+  "sensor_id": 1,
+  "sensor_rule_id": null,
+  "payload": {
+    "level": "1000",
+    "sensor_id": "12345",
+    "voltage": "5"
+  },
+  "created_at": "2018-08-24T08:56:29.269+07:00",
+  "updated_at": "2018-08-24T08:56:29.269+07:00"
+}
+```
+
+### Fetch
+
+      $ curl /api/sensors_events/1
+
+Sample Response:
+
+```json
+{
+  "id": 1,
+  "sensor_id": 1,
+  "sensor_rule_id": null,
+  "payload": {
+    "level": "1000",
+    "sensor_id": "12345",
+    "voltage": "5"
+  },
+  "created_at": "2018-08-24T08:56:29.269+07:00",
+  "updated_at": "2018-08-24T08:56:29.269+07:00"
+}
+```
+
+### Index and Filter
+
+#### All Sensors Events
+
+      $ curl /api/sensors_events
+
+Sample Response:
+
+    < HTTP/1.1 200 OK
+    < Per-Page: 25
+    < Total: 1
+
+```json
+[
+  {
+    "id": 1,
+    "sensor_id": 1,
+    "sensor_rule_id": null,
+    "payload": {
+      "level": "1000",
+      "voltage": "5",
+      "sensor_id": "12345"
+    },
+    "created_at": "2018-08-24T08:56:29.269+07:00",
+    "updated_at": "2018-08-24T08:56:29.269+07:00"
+  }
+]
+```
