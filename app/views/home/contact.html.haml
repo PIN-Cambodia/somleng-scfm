@@ -1,4 +1,28 @@
 .pricing-header.px-3.py-3.pt-md-5.pb-md-4.mx-auto.text-center
-  %h1.display-4 Contact us
-  %p.lead weifuhejk
+.jumbotron
+  .container.ews-content
+    / Example row of columns
+    .row
+      .col-md-3
+      .col-md-6.text-center
+        %h1 Contact
+        %hr/
+        %p
+          Please contact us if you have any feedback or complaints.
+        %p
+          Email:
+          %a{:href => "#"} complaints@ews1294.info
+          %br/
+          Phone : (+855) 9293 9169
+          %br/
+        %br/
+        %form.form-signin.ews-form-contact
+          %label.sr-only{:for => "inputName"} Name
+          %input#inputEmail.form-control{:autofocus => "", :placeholder => "Name", :required => "", :type => "text"}/
+          %label.sr-only{:for => "inputEmail"} Email address
+          %input#inputEmail.form-control{:autofocus => "", :placeholder => "Email", :required => "", :type => "email"}/
+          %textarea.form-control{:cols => "40", :name => "Text1", :placeholder => "Message", :rows => "3"}
+          %button.btn.btn-lg.ews-btn{:type => "submit"} Send
+      .col-md-3
+
 .container

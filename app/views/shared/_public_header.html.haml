@@ -1,12 +1,17 @@
-.d-flex.flex-column.flex-md-row.align-items-center.p-3.px-md-4.mb-3.bg-white.border-bottom.box-shadow
-  .my-0.mr-md-auto.font-weight-normal
+.d-flex.flex-column.flex-md-row.align-items-center.bg-white.ews-nav
+  %h5.my-0.mr-md-auto.font-weight-normal
     = link_to root_path do
       %h5
-        = link_to image_tag  "logos.png", :class => "my_class",:width => '200',:high =>'200'
-  %nav#top_nav.my-2.my-md-0.mr-md-3
+        = link_to image_tag  "EWS-web-mast.png", :class => "my_class",:width => '240'
+  %nav.my-2.my-md-0.mr-md-3.ews-nav-items
     = link_to("Sensor Map", root_path, class: "p-2 text-dark")
-    = link_to("About Us", about_path, class: "p-2 text-dark")
+    = link_to("How It Works",registration_path, class: "p-2 text-dark") 
     = link_to("Contact", contact_path, class: "p-2 text-dark")
-    = link_to_if(user_signed_in?, "Dashboard", dashboard_root_path, class: "p-2 text-dark") do
-      = link_to("Login", new_user_session_path, class: "p-2 text-dark")
+    %a.btn.btn-ews-nav{:href => "tel:1294"}
+      =image_tag "icon-phone.png", :width => "24"
+      Register
+    %btn.ews-lang
+    =image_tag  "kmflag.png",:width => '30'
+ 
+    
 

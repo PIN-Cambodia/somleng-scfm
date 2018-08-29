@@ -1,4 +1,26 @@
 
-.pricing-header.px-3.py-3.pt-md-5.pb-md-4.mx-auto.text-center
-  %p.lead [map goes here - chenda todo]
+.pricing-header
+  .container
+    .row
+      .col-ml-12
+        %iframe{:src => "https://wimes-cambodia-undp.brl.fr/#/map", :class =>"test"}
+.jumbotron.bg-dark
+  .container
+    / Example row of columns
+    .row.text-center.ews-stats
+      .col-md-4.ews-stats-item
+        %h2.stat-head.text-grey Registered Users
+        %h2.stat-highlight.text-light
+          15,660
+          %sup +
+      .col-md-4.ews-stats-item
+        %h2.stat-head.text-grey Provinces Covered
+        %h2.stat-highlight.text-light 9
+      .col-md-4.ews-stats-item
+        %h2.stat-head.text-grey Alerts Sent
+        %h2.stat-highlight.text-light
+          6,765
+          %sup +
+  	
+   
 .container
