@@ -1812,7 +1812,7 @@ Sample Response:
 
 #### All Sensors Events
 
-      $ curl /api/sensors_events
+      $ curl /api/sensor_events
 
 Sample Response:
 
