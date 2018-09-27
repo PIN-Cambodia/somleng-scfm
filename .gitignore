@@ -18,6 +18,7 @@
 !/tmp/.keep
 
 /node_modules
+/node
 /yarn-error.log
 
 remove_focus.rb

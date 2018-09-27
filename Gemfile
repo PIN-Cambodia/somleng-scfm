@@ -39,6 +39,7 @@ gem "turbolinks", "~> 5"
 gem "twilio-ruby"
 gem "uglifier", ">= 1.3.0"
 gem "wisper", github: "krisleech/wisper"
+gem 'mail_form', '~> 1.5', '>= 1.5.1'
 
 group :development, :test do
   gem "i18n-tasks"
