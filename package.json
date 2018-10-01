@@ -1,5 +1,11 @@
 {
   "name": "somleng-simple-cfm",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "html-autoprefixer": "^0.3.8",
+    "sass-autoprefixer": "^1.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer-core": "^6.0.1"
+  }
 }
