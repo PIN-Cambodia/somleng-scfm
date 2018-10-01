@@ -20,7 +20,11 @@ module WebMockLastRequest
 end
 
 WebMock.extend(WebMockLastRequest)
-WebMock.disable_net_connect!(allow_localhost: true)
+if ENV['SELENIUM_REMOTE_HOST'].present?
+  WebMock.allow_net_connect!
+else
+  WebMock.disable_net_connect!(allow_localhost: true)
+end
 
 WebMock.after_request do |request_signature, _response|
   WebMock.last_request = request_signature

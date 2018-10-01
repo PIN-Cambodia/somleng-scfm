@@ -250,12 +250,11 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.0)
       mini_mime (>= 0.1.1)
-    mapbox-gl-rails (0.49.0)
-      railties (>= 3.2, < 6.0)
-    marcel (0.3.2)
     mail_form (1.7.1)
       actionmailer (>= 3.2, < 6)
       activemodel (>= 3.2, < 6)
+    mapbox-gl-rails (0.49.0)
+      railties (>= 3.2, < 6.0)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     method_source (0.9.0)
@@ -475,8 +474,8 @@ DEPENDENCIES
   kaminari
   leaflet-rails
   listen (>= 3.0.5, < 3.2)
-  mapbox-gl-rails
   mail_form (~> 1.5, >= 1.5.1)
+  mapbox-gl-rails
   octicons_helper
   okcomputer
   pg

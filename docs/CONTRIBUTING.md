@@ -15,7 +15,11 @@ Now, this new branch is on your computer as well as git. You can work on this as
 
 Before pushing your code changes, please make sure to run the test suite, ensuring that nothing breaks. To do this, run the following:
 
-Ensure that docker-compose is running, and then from the same directory, attach to the docker container with bash:
+Since we're using selenium for some of the tests, we need to fire up a chrome headless browser in selenium to properly run all the tests. In order to do this, use the following command to start up `docker-compose` instead of the normal one:
+
+    docker-compose -f docker-compose.yml -f docker-compose-selenium.yml up
+
+And then from the same directory, attach to the docker container with bash:
 
     docker exec -it somleng-scfm_somleng-scfm_1 bash
 
@@ -25,9 +29,9 @@ If this is your first time running tests, we need to make sure that the database
 
 Followed by the actual test suite:
 
-    DATABASE_URL=postgres://postgres:@db/somleng_scfm_test RAILS_ENV=test rake
+    SELENIUM_REMOTE_HOST=selenium DATABASE_URL=postgres://postgres:@db/somleng_scfm_test RAILS_ENV=test rake
 
-This takes about 10 mins to run currently. If you do not see any failures in the test, you're ready to commit your changes
+This takes about 5-10 mins to run, so it's a good chance to grab a coffee! If you do not see any failures in the test, you're ready to commit your changes
 
 ## Committing and creating a pull request
 
