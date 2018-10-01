@@ -17,6 +17,9 @@
 //= require selectize
 //= require pumi
 
+//= require leaflet
+//*= require mapbox-gl
+
 //= require rails-ujs
 //= require activestorage
 //= require cocoon

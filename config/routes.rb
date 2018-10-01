@@ -77,6 +77,10 @@ Rails.application.routes.draw do
     resources :sensor_events, only: %i[index show]
   end
 
+  namespace "geojson", defaults: { format: "json" } do
+    resources :sensors, only: :index
+  end
+
   namespace "api", defaults: { format: "json" } do
     defaults format: :xml do
       resources :remote_phone_call_events, only: :create

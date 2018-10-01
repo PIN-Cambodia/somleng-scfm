@@ -39,6 +39,8 @@ gem "turbolinks", "~> 5"
 gem "twilio-ruby"
 gem "uglifier", ">= 1.3.0"
 gem "wisper", github: "krisleech/wisper"
+gem "leaflet-rails"
+gem 'mapbox-gl-rails'
 
 group :development, :test do
   gem "i18n-tasks"
