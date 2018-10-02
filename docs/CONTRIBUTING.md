@@ -33,6 +33,14 @@ Followed by the actual test suite:
 
 This takes about 5-10 mins to run, so it's a good chance to grab a coffee! If you do not see any failures in the test, you're ready to commit your changes
 
+Alternatively, if you want to only run a specific test file, you can use:
+
+    SELENIUM_REMOTE_HOST=selenium DATABASE_URL=postgres://postgres:@db/somleng_scfm_test RAILS_ENV=test rspec spec/system/dashboard/callouts_spec.rb
+
+Or even only a specific test from a specific file (using the line number of the test, in this case line number `39`)
+
+    SELENIUM_REMOTE_HOST=selenium DATABASE_URL=postgres://postgres:@db/somleng_scfm_test RAILS_ENV=test rspec spec/system/dashboard/callouts_spec.rb:39
+
 ## Committing and creating a pull request
 
 Commit your changes as normal with git, and then go to https://github.com/PIN-Cambodia/somleng-scfm/pulls to create a new pull request. You want to create this with develop as the target (the first dropdown) and your new branch as the source (the second dropdown). As you do this, all the automated testing will run again, and if this passed, anyone with admin access to the github repo will be able to approve the pull request.
