@@ -3,9 +3,9 @@
     = link_to root_path do
       %h5
         = link_to image_tag  "EWS-web-mast.png", :class => "my_class",:width => '240'
-  %nav.my-2.my-md-0.mr-md-3.ews-nav-items
+  %nav#top_nav.my-2.my-md-0.mr-md-3.ews-nav-items
     = link_to("Sensor Map", root_path, class: "p-2 text-dark")
-    = link_to("How It Works",registration_path, class: "p-2 text-dark") 
+    = link_to("How It Works", how_path, class: "p-2 text-dark") 
     = link_to("Contact", contact_path, class: "p-2 text-dark")
     %a.btn.btn-ews-nav{:href => "tel:1294"}
       =image_tag "icon-phone.png", :width => "24"

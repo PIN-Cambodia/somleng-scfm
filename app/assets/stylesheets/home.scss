@@ -23,7 +23,7 @@
   width:1700px;
   height:1300px;
   margin-top:-2%;
-  
+
   }
 
   .border-top { border-top: 1px solid #e5e5e5; }
@@ -44,7 +44,7 @@
 
 
 html { font-family: 'Open Sans', sans-serif;}
-          
+
 body {background:#eee; color:#333;font-size: 16px; font-family: 'Open Sans', sans-serif;}
 
 a {color:inherit;}
@@ -81,13 +81,13 @@ p {margin-bottom:1.2em;}
     text-align: center;
     width: 1.6em;}
 
-.bg-white {background:#ffffff;}          
-          
+.bg-white {background:#ffffff;}
+
 .text-grey {color:#aaa;}
 
 
 .container { max-width: 1080px;}
-.jumbotron {border-radius:0; margin-bottom:0; }   
+.jumbotron {border-radius:0; margin-bottom:0; }
 
  .ews-nav {font-size:16px; font-weight:bold; text-transform:uppercase; padding:20px;}
 .ews-content {}
@@ -95,26 +95,26 @@ p {margin-bottom:1.2em;}
 
 
 .btn-ews-nav {color:inherit; background:#ddd; padding:10px 20px; font-weight:bold;}
-      
+
 .ews-lang {margin:0 7px;}
 
 .ews-stats h2 {font-size:26px;}
 
 .ews-btn {background:#000; border-radius:0; color:#fff; padding:15px 40px; border:0; margin:15px; text-transform:uppercase;}
-           
+
 .stat-head {margin-bottom:0;}
 .stat-highlight {font-size:3em !important; margin-top:-3px;}
-          
+
 .ews-intro {font-size:16px;}
 
 .ews-small-link {font-size:13px; text-transform:uppercase; text-decoration:underline; color:#aaa; margin:3px 0;}
-      
+
 .ews-logo-strip {margin-top:-20px;width:100%;}
-          
+
 .ews-form-signin {max-width:320px; margin: 0 auto;}
 
 .ews-content .form-control {margin:10px; padding:15px;}
-          
+
 .ews-form-contact {max-width:520px; margin: 0 auto;}
 
 .ews-how-step {background-size: contain !important; min-height:500px; padding:30px; border:3px solid #fff;}
@@ -124,11 +124,14 @@ p {margin-bottom:1.2em;}
 .footer-credits {padding:30px; font-size:13px;}
 
 .footer-credits a {color:inherit;}
-          
-#map {width: auto;height:500px;} 
-          
+
+#map {
+  width: auto;
+  height:500px;
+}
+
  @media (max-width: 768px) {
 .ews-nav-items {margin: 15px !important; }
-.ews-stats-item {margin-bottom:30px;} 
+.ews-stats-item {margin-bottom:30px;}
 .ews-how-step {font-size:14px; background-size: contain !important; min-height:400px; padding:30px; border:3px solid #fff;}
   }

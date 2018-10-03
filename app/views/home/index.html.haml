@@ -1,8 +1,8 @@
-.pricing-header
-  .container
-    .row
-      .col-ml-12
-        %iframe{:src => "https://wimes-cambodia-undp.brl.fr/#/map", :class =>"test"}
+- content_for :javascripts do
+  = javascript_include_tag "map.js"
+
+#map
+
 .jumbotron.bg-dark
   .container
     / Example row of columns
@@ -20,6 +20,6 @@
         %h2.stat-highlight.text-light
           6,765
           %sup +
-  	
-   
+
+
 .container

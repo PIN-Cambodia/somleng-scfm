@@ -29,6 +29,13 @@ From a new terminal, in the SCFM directory, run:
 
 Note that this command exposes port 3000 to your host. You should now see SCFM booted at <http://localhost:3000>
 
+#### "Already running"
+If you get an error in the output stating that "A server is already running. Check /usr/src/app/tmp/pids/server.pid.", run the following command:
+
+  docker-compose run somleng-scfm /bin/bash -c 'rm /usr/src/app/tmp/pids/server.pid'
+
+And then try to run `docker-compose up` again
+
 ### Setup the Database
 
 The next need to do is create the database and setup a Super Admin account. Go ahead and run the following commands in the first terminal:

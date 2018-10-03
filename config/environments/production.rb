@@ -122,5 +122,4 @@ Rails.application.configure do
   }
 
   config.time_zone = Rails.application.secrets.fetch(:time_zone)
-
 end
