@@ -1,4 +1,3 @@
-!!!
 %html#home{:lang => "en"}
   %head
     = csrf_meta_tags
@@ -13,3 +12,7 @@
   %body
     = render("shared/public_header")
     = yield
+
+  %footer
+    = render("shared/public_footer")
+   

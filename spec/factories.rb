@@ -40,8 +40,8 @@ FactoryBot.define do
 
   factory :callout do
     account
-    commune_ids ["040202"]
-    call_flow_logic CallFlowLogic::HelloWorld
+    commune_ids { ["040202"] }
+    call_flow_logic { CallFlowLogic::HelloWorld }
 
     transient do
       audio_file { "test.mp3" }
@@ -175,10 +175,10 @@ FactoryBot.define do
     email
     password { "secret123" }
     password_confirmation { password }
-    roles :member
+    roles { :member }
 
     factory :admin do
-      roles :admin
+      roles { :admin }
     end
   end
 
@@ -190,11 +190,11 @@ FactoryBot.define do
   factory :sensor do
     account
     external_id { generate(:sensor_external_id) }
-    commune_ids ["040202"]
+    commune_ids { ["040202"] }
 
     trait :with_rules do
       transient do
-        rules_count 1
+        rules_count { 1 }
       end
 
       after(:create) do |sensor, evaluator|
@@ -205,10 +205,10 @@ FactoryBot.define do
 
   factory :sensor_rule do
     sensor
-    level 500
+    level { 500 }
 
     transient do
-      alert_filename "test.mp3"
+      alert_filename { "test.mp3" }
     end
 
     after(:build) do |sensor_rule, evaluator|

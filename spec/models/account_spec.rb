@@ -20,7 +20,7 @@ RSpec.describe Account do
   end
 
   describe "validations" do
-    it { is_expected.to validate_inclusion_of(:platform_provider_name).in_array(%w[twilio somleng]).allow_nil }
+    it { is_expected.to validate_inclusion_of(:platform_provider_name).in_array(%w[twilio somleng]) }
   end
 
   describe "defaults" do

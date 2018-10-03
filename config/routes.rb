@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   root "home#index"
   get "about", to: "home#about", as: "about"
   get "contact", to: "home#contact", as: "contact"
+  get "how_to_create", to: "home#how_to_create", as: "how"
 
   get "dashboard", to: "dashboard/callouts#index", as: :user_root
 
@@ -74,6 +75,10 @@ Rails.application.routes.draw do
     end
 
     resources :sensor_events, only: %i[index show]
+  end
+
+  namespace "geojson", defaults: { format: "json" } do
+    resources :sensors, only: :index
   end
 
   namespace "api", defaults: { format: "json" } do

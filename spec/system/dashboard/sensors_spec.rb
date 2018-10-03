@@ -146,7 +146,7 @@ RSpec.describe "Sensors", :aggregate_failures do
     expect(page).to have_text("Sensor was successfully updated.")
     sensor.reload
     expect(sensor.external_id).to eq("sensor005")
-    expect(sensor.commune_ids).to match_array(["020102"])
+    expect(sensor.commune_ids).to match_array(["010201", "020102"])
     expect(sensor.metadata.fetch("height_above_sea_level")).to eq("100")
     expect(sensor.metadata).not_to have_key("foo")
   end

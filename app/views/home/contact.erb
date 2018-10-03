@@ -1,0 +1,61 @@
+ <main role="main">
+      <div class="jumbotron">
+        <div class="container ews-content">
+        <!-- Example row of columns -->
+          <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 text-center">
+              <h1>Contact</h1>
+              <hr>
+              <p>Please contact us if you have any feedback or complaints.</p>
+              <p>Email: <a href="#">complaints@ews1294.info</a><br>
+                Phone : (+855) 9293 9169<br />
+              </p>
+              <br>
+              <form class="form-signin ews-form-contact " method="POST" >
+                <label for="inputEmail" class="sr-only">Email address</label>
+                <input type="text" id="name" class="form-control" placeholder="Name" name="name" required autofocus>
+                <label for="inputEmail" class="sr-only">Email address</label>
+                <input type="email" id="email" class="form-control" placeholder="Email" name=" email" required autofocus>
+                <textarea name="message" id="message" cols="40" rows="3" placeholder="Message" class="form-control"></textarea>
+                <input type="text" name="_gotcha" style="display:none" />
+                <input type="hidden" name="_subject" value="test!" /> 
+                <input type="hidden" name="_format" value="plain" />        
+              
+                <button class="btn btn-lg ews-btn" type="submit">Send</button>
+              </form>
+            </div> 
+       
+             <div class="col-md-3"></div>
+            
+          </div>
+
+        </div>
+      </div> <!-- /container -->
+
+ <script type="text/javascript">
+  $(function($){
+   $("form").submit(function(event){
+    event.preventDefault();
+      $.ajax({
+        url:"https://formspree.io/tiadmin@peopleinneed.cz",
+        method: "POST",
+        data: {
+          name: $("#name").val(),
+          email: $("#email").val(),
+          message: $("#message").val(),
+          _subject:'EWS1294 feedback',
+        },
+        dataType: "json"
+      }).done(function(){
+        $("#name").val("");
+        $("#email").val("");
+        $("#message").val("");
+        alert("Your email was submit to us. Thank you!");
+      }).fail(function(){
+        alert("error, Your email as not submited!...");
+    });
+
+  });
+});
+</script> 
