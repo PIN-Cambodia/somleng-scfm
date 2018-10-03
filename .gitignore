@@ -40,3 +40,4 @@ examples.txt
 
 # Terraform
 .terraform
+public/assets
