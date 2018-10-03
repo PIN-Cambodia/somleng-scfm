@@ -10,7 +10,7 @@ class Geojson::SensorsController < BaseController
             type: "Feature",
             geometry: {
               type: 'Point',
-              coordinates: [sensor.metadata['latitude'], sensor.metadata['longitude']]
+              coordinates: [sensor.metadata['longitude'], sensor.metadata['latitude']]
             },
             properties: {
               name: sensor.province.name_en,
