@@ -6,9 +6,11 @@ RSpec.describe "Landing Page" do
 
     within("#top_nav") do
       expect(page).to have_link("Sensor Map", href: root_path)
-      expect(page).to have_link("About Us", href: about_path)
       expect(page).to have_link("Contact", href: contact_path)
-      expect(page).to have_link("How to registration?", href: registration_path)
+      expect(page).to have_link("How It Works", href: how_path)
+    end
+
+    within("footer.footer-credits") do
       expect(page).to have_link("Login", href: new_user_session_path)
     end
   end
@@ -18,8 +20,9 @@ RSpec.describe "Landing Page" do
     sign_in(user)
     visit(root_path)
 
-    within("#top_nav") do
+    within("footer.footer-credits") do
       expect(page).to have_link("Dashboard", href: dashboard_root_path)
+     
     end
   end
 end
