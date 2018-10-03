@@ -19,7 +19,7 @@ RSpec.describe "GeoJSON" do
     parsed_body = JSON.parse(response.body)
     expect(parsed_body.fetch("type")).to eq 'FeatureCollection'
     expect(parsed_body.fetch("features").size).to eq 1
-    expect(parsed_body.fetch("features").first.fetch("geometry").fetch('coordinates')).to eq [104.163297,10.677273]
+    expect(parsed_body.fetch("features").first.fetch("geometry").fetch('coordinates')).to eq [10.677273,104.163297]
   end
 end
 
