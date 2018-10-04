@@ -22,6 +22,12 @@ var yellowIcon = L.icon({
 		iconAnchor: [16, 37],
 		popupAnchor: [0, -28]
 	});
+var orangeIcon = L.icon({
+		iconUrl: '<%= asset_path('map-marker-orange.png') %>',
+		iconSize: [25, 41],
+		iconAnchor: [16, 37],
+		popupAnchor: [0, -28]
+	});
 var blueIcon = L.icon({
 		iconUrl: '<%= asset_path('map-marker-blue.png') %>',
 		iconSize: [25, 41],
@@ -31,7 +37,7 @@ var blueIcon = L.icon({
 
 $( document ).on('turbolinks:load', function() {
   var map = L.map('map').setView([12.4031626,105.7709708], 7);
-																													 
+
   L.tileLayer('https://api.mapbox.com/styles/v1/pintiadmin/cjmhgktg36qla2sltkn1tik4n/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -45,9 +51,11 @@ $( document ).on('turbolinks:load', function() {
       pointToLayer: function (feature, latlng) {
 				if(feature.properties.status == 'active')
         	return L.marker(latlng, {icon: greenIcon});
-				if(feature.properties.status == 'danger')
+				if(feature.properties.status == 'watch')
         	return L.marker(latlng, {icon: yellowIcon});
-				if(feature.properties.status == 'alarm')
+				if(feature.properties.status == 'warning')
+        	return L.marker(latlng, {icon: orangeIcon});
+				if(feature.properties.status == 'severe_warning')
         	return L.marker(latlng, {icon: redIcon});
 				if(feature.properties.status == 'inactive')
         	return L.marker(latlng, {icon: greyIcon});
