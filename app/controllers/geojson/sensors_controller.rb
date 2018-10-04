@@ -63,6 +63,9 @@ class Geojson::SensorsController < BaseController
 
   def water_level(sensor)
     last_event = sensor.sensor_events.last
+    if last_event.nil?
+      return nil
+    end
     water_level = sensor.metadata['riverbed_to_sensor'].to_f - last_event.payload['distance'].to_f
     # Old sensor format - sensor height is hardcoded in the firmware, so it reports water_height directly, but is harder to update
     if last_event.payload['streamheight'].present?

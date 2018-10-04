@@ -9,6 +9,7 @@ RSpec.describe "GeoJSON" do
       account: admin.account,
       commune_ids: ["040101"],
       metadata: {
+        type: "bridge",
         latitude: 104.163297,
         longitude: 10.677273
       }
