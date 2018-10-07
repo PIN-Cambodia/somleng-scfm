@@ -41,7 +41,7 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/shoulda-matchers.git
-  revision: 517d0ec9dd2961fc78d8d0bcd48660d7acabfe7a
+  revision: e2154f9e4e789fef5011245024b9e4a4eb830ffb
   specs:
     shoulda-matchers (4.0.0.rc1)
       activesupport (>= 4.2.0)
@@ -99,8 +99,8 @@ GEM
     autoprefixer-rails (9.1.4)
       execjs
     aws-eventstream (1.0.1)
-    aws-partitions (1.104.0)
-    aws-sdk-core (3.27.0)
+    aws-partitions (1.105.0)
+    aws-sdk-core (3.30.0)
       aws-eventstream (~> 1.0)
       aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.0)
@@ -108,7 +108,7 @@ GEM
     aws-sdk-kms (1.9.0)
       aws-sdk-core (~> 3, >= 3.26.0)
       aws-sigv4 (~> 1.0)
-    aws-sdk-s3 (1.20.0)
+    aws-sdk-s3 (1.21.0)
       aws-sdk-core (~> 3, >= 3.26.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.0)
@@ -143,7 +143,7 @@ GEM
       archive-zip (~> 0.10)
       nokogiri (~> 1.8)
     cocoon (1.2.11)
-    codecov (0.1.10)
+    codecov (0.1.11)
       json
       simplecov
       url
@@ -269,7 +269,7 @@ GEM
     multi_json (1.13.1)
     multipart-post (2.0.0)
     nio4r (2.3.1)
-    nokogiri (1.8.4)
+    nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
     octicons (8.1.0)
       nokogiri (>= 1.6.3.1)
@@ -413,7 +413,7 @@ GEM
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    twilio-ruby (5.14.0)
+    twilio-ruby (5.14.1)
       faraday (~> 0.9)
       jwt (>= 1.5, <= 2.5)
       nokogiri (>= 1.6, < 2.0)
