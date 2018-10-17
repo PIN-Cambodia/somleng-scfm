@@ -2,6 +2,6 @@
   = link_to(translate(:"titles.contacts.new"), new_dashboard_contact_path, class: 'btn btn-outline-success')
 
 - content_for(:resources_table) do
-  = render("shared/resources_table", resource_class: Contact, columns: [:msisdn, :created_at])
+  = render("shared/resources_table", resource_class: Contact, columns: [:msisdn, :created_at ])
 
 = render("shared/index")

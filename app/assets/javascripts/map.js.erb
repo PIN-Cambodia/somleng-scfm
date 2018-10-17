@@ -55,8 +55,12 @@ $( document ).on('turbolinks:load', function() {
         	return L.marker(latlng, {icon: blueIcon});
       },
 			onEachFeature(feature, layer) {
-				var popupContent = "<p>" + feature.properties.name + "</p>";
+				var last6 = "View Table - Last 6 hours" ;
+				var layout = "<iframe id='iframe'  frameBorder='0' src='<%= asset_path( 'sensorGraph.html' ) %>'></iframe>";
+				var last30 = "View Table - Last 30 days"
+				var popupContent = "<p>" + layout + last6 + "</br>"+ last30 +"</p>";
 				layer.bindPopup(popupContent);
+			
 			}
     }).addTo(map)
   })

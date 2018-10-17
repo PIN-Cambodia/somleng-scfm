@@ -1,4 +1,4 @@
-var sensorRecentData = {"type":"from_my_database","sensorID":"101065684","sensorName":"Siem Reap","warningThreshold":"330","alertThreshold":"350","record":[
+var sensorRecentData = {"type":"from_my_database","sensorID":"101065684","sensorName":"Battambang","warningThreshold":"330","alertThreshold":"350","record":[
 {"type":"record","id":"01","timestamp":"01/02/2018 00:00:00","height":"302","voltage":"5000"},
 {"type":"record","id":"02","timestamp":"02/02/2018 00:00:00","height":"305","voltage":"5000"},
 {"type":"record","id":"03","timestamp":"03/02/2018 00:00:00","height":"307","voltage":"5000"},
