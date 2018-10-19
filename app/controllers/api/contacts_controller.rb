@@ -16,7 +16,7 @@ class Api::ContactsController < Api::FilteredContactsController
   end
 
   def permitted_params
-    params.permit(:msisdn, :metadata_merge_mode, metadata: {})
+    params.permit(:msisdn, :created_at, :metadata_merge_mode, metadata: {})
   end
 
   def callout
