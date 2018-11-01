@@ -129,6 +129,18 @@ p {margin-bottom:1.2em;}
   width: auto;
   height:500px;
 }
+.popup_river_level {
+  height: 250px;
+
+  > i.fa-spinner {
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: -18px;
+    left: 50%;
+    margin-left: -23px;
+  }
+}
 
  @media (max-width: 768px) {
 .ews-nav-items {margin: 15px !important; }
@@ -140,5 +152,5 @@ p {margin-bottom:1.2em;}
   height: 360px;
 }
 .leaflet-popup {
-  width:630px;
+  width:600px;
 }

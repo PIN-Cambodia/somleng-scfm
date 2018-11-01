@@ -81,6 +81,10 @@ Rails.application.routes.draw do
     resources :sensors, only: :index
   end
 
+  namespace "datapoints", defaults: { format: "json" } do
+    resources :sensor_events, only: :index
+  end
+
   namespace "api", defaults: { format: "json" } do
     defaults format: :xml do
       resources :remote_phone_call_events, only: :create
