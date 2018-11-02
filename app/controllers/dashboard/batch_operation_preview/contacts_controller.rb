@@ -10,4 +10,5 @@ class Dashboard::BatchOperationPreview::ContactsController < Dashboard::BaseCont
   def batch_operation_scope
     current_account.batch_operations.can_preview_contacts
   end
+  
 end

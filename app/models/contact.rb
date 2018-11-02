@@ -42,4 +42,5 @@ class Contact < ApplicationRecord
     return unless commune_ids.is_a?(String)
     metadata["commune_ids"] = commune_ids.split(/\s+/)
   end
+
 end

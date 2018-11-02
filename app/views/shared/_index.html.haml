@@ -1,6 +1,9 @@
 #page_entries_info.col-12
   %h6
     = page_entries_info(resources)
+    = form_for "search_path", :class => "navbar-search pull-left", :method => :get do
+      = text_field_tag :search, params[:search], :placeholder => "Search"
+      = submit_tag "Search", :name => nil
 .col-12{class: ("resources-filter" if content_for?(:resources_filter))}
   - if content_for?(:resources_filter)
     #filters.dropdown.show

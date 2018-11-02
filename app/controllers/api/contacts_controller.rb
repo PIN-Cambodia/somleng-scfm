@@ -13,6 +13,7 @@ class Api::ContactsController < Api::FilteredContactsController
 
   def association_chain
     current_account.contacts.all
+    current_account.contacts
   end
 
   def permitted_params

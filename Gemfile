@@ -43,6 +43,7 @@ gem "leaflet-rails"
 gem 'mapbox-gl-rails'
 gem 'mail_form', '~> 1.5', '>= 1.5.1'
 gem 'echarts-rails', '~> 0.1.0'
+gem 'pg_search'
 
 group :development, :test do
   gem "i18n-tasks"

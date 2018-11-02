@@ -47,6 +47,10 @@ class BaseController < ApplicationController
     @resources = find_filtered_resources.order(sort_params.order_attributes)
   end
 
+  def search_resources
+    @resource = association_chain.search(params[:search])
+  end
+
   def find_resource
     @resource = association_chain.find(params[:id])
   end
@@ -159,5 +163,10 @@ class BaseController < ApplicationController
 
   def sort_params
     @sort_params ||= SortParams.new(params: params)
+  end
+
+  # search controller
+  def search
+    @search =Search.search(params[:search])
   end
 end

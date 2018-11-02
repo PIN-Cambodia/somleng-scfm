@@ -28,6 +28,12 @@ var blueIcon = L.icon({
 		iconAnchor: [16, 37],
 		popupAnchor: [0, -28]
 	});
+var circle = L.circle([51.508, -0.11], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 500
+});
 
 $( document ).on('turbolinks:load', function() {
   var map = L.map('map').setView([12.4031626,105.7709708], 7);
@@ -57,7 +63,7 @@ $( document ).on('turbolinks:load', function() {
 			onEachFeature(feature, layer) {
 				var last6 = "View Table - Last 6 hours" ;
 				var layout = "<iframe id='iframe'  frameBorder='0' src='<%= asset_path( 'sensorGraph.html' ) %>'></iframe>";
-				var last30 = "View Table - Last 30 days"
+				var last30 = "View Table - Last 30 days";
 				var popupContent = "<p>" + layout + last6 + "</br>"+ last30 +"</p>";
 				layer.bindPopup(popupContent);
 			
@@ -65,3 +71,5 @@ $( document ).on('turbolinks:load', function() {
     }).addTo(map)
   })
 });
+
+

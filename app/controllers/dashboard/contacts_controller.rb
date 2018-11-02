@@ -19,9 +19,12 @@ class Dashboard::ContactsController < Dashboard::BaseController
 
   def build_key_value_fields
     resource.build_metadata_field if resource.metadata_fields.empty?
+
   end
 
   def before_update_attributes
     clear_metadata
+
   end
+  
 end

@@ -93,4 +93,5 @@ class Dashboard::BaseController < BaseController
   def _prepare_for_render
     prepare_breadcrumbs
   end
+
 end

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get "about", to: "home#about", as: "about"
   get "contact", to: "home#contact", as: "contact"
   get "how_to_create", to: "home#how_to_create", as: "how"
+  get "sensorlog", to: "home#sensorlog_6_hours", as: "sensorlog"
 
   get "dashboard", to: "dashboard/callouts#index", as: :user_root
 
@@ -150,7 +151,8 @@ Rails.application.routes.draw do
     resources :sensor_rules, except: %i[new create edit] do
       resources :sensor_events, only: :index
     end
-
+    
     resources :sensor_events, only: %i[index show create]
   end
+  
 end

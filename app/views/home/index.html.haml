@@ -1,7 +1,15 @@
 - content_for :javascripts do
   = javascript_include_tag "map.js"
-
 #map
+.container
+  .row
+    .col-sm-8
+    .info.legend.leaflet-control.col-sm-4{:style => "background:#fff; padding:25px;margin-top:-350px;height: 200px;"}
+      %h2{:style => "font-size:20px;"}
+        EWS 1294 warns people in advance of natural hazards occurring in
+        Cambodia.
+      %p.mb-0
+        %a.btn.btn-primary.btn-lg.ews-btn{:href => "#", :role => "button", :style => "margin:20px 0;"} Learn More
 
 .jumbotron.bg-dark
   .container
