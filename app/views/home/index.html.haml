@@ -10,16 +10,18 @@
       .col-md-4.ews-stats-item
         %h2.stat-head.text-grey Registered Users
         %h2.stat-highlight.text-light
-          15,660
+          = @contacts 
           %sup +
       .col-md-4.ews-stats-item
-        %h2.stat-head.text-grey Provinces Covered
-        %h2.stat-highlight.text-light 9
+        %h2.stat-head.text-grey Sensors Covered
+        %h2.stat-highlight.text-light 
+          = @sensors
       .col-md-4.ews-stats-item
         %h2.stat-head.text-grey Alerts Sent
         %h2.stat-highlight.text-light
-          6,765
+          = @call_participation
           %sup +
+          
 
 
 .container
