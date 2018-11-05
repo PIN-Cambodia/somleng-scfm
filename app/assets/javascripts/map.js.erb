@@ -35,6 +35,91 @@ var blueIcon = L.icon({
 		popupAnchor: [0, -28]
 	});
 
+let showSensorGraph = (feature) => {
+	// based on prepared DOM, initialize echarts instance
+	var myChart = echarts.init(document.getElementById('popup-' + feature.properties.external_id));
+
+	myChart.showLoading();
+	start = new Date();
+	start.setHours(start.getHours()-6);
+
+	$.get('/datapoints/sensor_events.json', {external_id: feature.properties.external_id, start: start, end: new Date()}, function(sensorRecentData) {
+		var data = sensorRecentData
+		
+		myChart.hideLoading();
+
+		// specify chart configuration item and data
+		var option = {
+			title: {
+				left: 'center',
+				text: feature.properties.name + " (" + feature.properties.external_id + ")"
+			},
+			tooltip: {
+				trigger: 'axis',
+				position: function (pos, params, el, elRect, size) {
+					var obj = {top: 10};
+					obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+					return obj;
+				}
+	    },
+			toolbox: {
+	    	feature: {
+	      	dataZoom: { show: false, yAxisIndex: 'none' },
+	        restore: { show : false },
+	        saveAsImage: { show: false, title : 'Save Image' }
+	      }
+	    },
+	    xAxis: { type: 'time'},
+	    yAxis: { type: 'value', boundaryGap: [0, '100%'], max: 'dataMax' },
+	    series: [
+				{
+					name: 'Water Level',
+	        type: 'line',
+	        smooth: true,
+					smoothMonotone: 'y',
+	        symbol: 'circle',
+	        sampling: 'max',
+	        itemStyle: { normal: { color: 'rgb(240,248,255)' } },
+	        areaStyle: {
+	        	normal: {
+							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+								{ offset: 0, color: 'rgb(0, 191, 255)' },
+								{ offset: 1, color: 'rgb(0, 0, 128)' }
+							])
+	          }
+	        },
+	        data: data,
+					markLine: {
+						name: 'Warning', type: 'line', smooth: true,
+						data: [
+							[{
+	            		xAxis: data[0].value[0],
+	            		yAxis: feature.properties.trigger_levels.warning,
+	            		lineStyle: { normal: { color: "#ff9224" } },
+	            		label: { normal: { show: true, position: 'end', formatter: 'Warning' } }
+	          		},
+	          		{ xAxis: data[data.length - 1].value[0], yAxis: feature.properties.trigger_levels.warning }
+							],
+							[
+	           		{
+	            		xAxis: data[0].value[0],
+	            		yAxis: feature.properties.trigger_levels.severe_warning,
+	            		lineStyle: { normal: { color: "#ff2323" } },
+	            		label: { normal: { show: true, position: 'end', formatter: 'Severe warning' } }
+	          		},
+	          		{ xAxis: data[data.length - 1].value[0], yAxis: feature.properties.trigger_levels.severe_warning }
+							]
+				  	]
+					}
+        }
+			]
+		};
+
+		// use configuration item and data specified to show chart
+		myChart.setOption(option);
+	})
+}
+
 $( document ).on('turbolinks:load', function() {
   var map = L.map('map').setView([12.4031626,105.7709708], 7);
 
@@ -63,8 +148,13 @@ $( document ).on('turbolinks:load', function() {
         	return L.marker(latlng, {icon: blueIcon});
       },
 			onEachFeature(feature, layer) {
-				var popupContent = "<p>" + feature.properties.name + "</p>";
-				layer.bindPopup(popupContent);
+				layer
+					.bindPopup("<div class='popup_river_level' id='popup-" + feature.properties.external_id + "'></div>", {
+						maxWidth: '100%'
+					})
+					.on('popupopen', function(event) {
+						showSensorGraph(event.popup._source.feature)
+					})
 			}
     }).addTo(map)
   })
