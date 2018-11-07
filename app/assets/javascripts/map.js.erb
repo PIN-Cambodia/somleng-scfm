@@ -22,22 +22,107 @@ var yellowIcon = L.icon({
 		iconAnchor: [16, 37],
 		popupAnchor: [0, -28]
 	});
+var orangeIcon = L.icon({
+		iconUrl: '<%= asset_path('map-marker-orange.png') %>',
+		iconSize: [25, 41],
+		iconAnchor: [16, 37],
+		popupAnchor: [0, -28]
+	});
 var blueIcon = L.icon({
 		iconUrl: '<%= asset_path('map-marker-blue.png') %>',
 		iconSize: [25, 41],
 		iconAnchor: [16, 37],
 		popupAnchor: [0, -28]
 	});
-var circle = L.circle([51.508, -0.11], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: 500
-});
+
+let showSensorGraph = (feature) => {
+	// based on prepared DOM, initialize echarts instance
+	var myChart = echarts.init(document.getElementById('popup-' + feature.properties.external_id));
+
+	myChart.showLoading();
+	start = new Date();
+	start.setHours(start.getHours()-6);
+
+	$.get('/datapoints/sensor_events.json', {external_id: feature.properties.external_id, start: start, end: new Date()}, function(sensorRecentData) {
+		var data = sensorRecentData
+		
+		myChart.hideLoading();
+
+		// specify chart configuration item and data
+		var option = {
+			title: {
+				left: 'center',
+				text: feature.properties.name + " (" + feature.properties.external_id + ")"
+			},
+			tooltip: {
+				trigger: 'axis',
+				position: function (pos, params, el, elRect, size) {
+					var obj = {top: 10};
+					obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+					return obj;
+				}
+	    },
+			toolbox: {
+	    	feature: {
+	      	dataZoom: { show: false, yAxisIndex: 'none' },
+	        restore: { show : false },
+	        saveAsImage: { show: false, title : 'Save Image' }
+	      }
+	    },
+	    xAxis: { type: 'time'},
+	    yAxis: { type: 'value', boundaryGap: [0, '100%'], max: 'dataMax' },
+	    series: [
+				{
+					name: 'Water Level',
+	        type: 'line',
+	        smooth: true,
+					smoothMonotone: 'y',
+	        symbol: 'circle',
+	        sampling: 'max',
+	        itemStyle: { normal: { color: 'rgb(240,248,255)' } },
+	        areaStyle: {
+	        	normal: {
+							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+								{ offset: 0, color: 'rgb(0, 191, 255)' },
+								{ offset: 1, color: 'rgb(0, 0, 128)' }
+							])
+	          }
+	        },
+	        data: data,
+					markLine: {
+						name: 'Warning', type: 'line', smooth: true,
+						data: [
+							[{
+	            		xAxis: data[0].value[0],
+	            		yAxis: feature.properties.trigger_levels.warning,
+	            		lineStyle: { normal: { color: "#ff9224" } },
+	            		label: { normal: { show: true, position: 'end', formatter: 'Warning' } }
+	          		},
+	          		{ xAxis: data[data.length - 1].value[0], yAxis: feature.properties.trigger_levels.warning }
+							],
+							[
+	           		{
+	            		xAxis: data[0].value[0],
+	            		yAxis: feature.properties.trigger_levels.severe_warning,
+	            		lineStyle: { normal: { color: "#ff2323" } },
+	            		label: { normal: { show: true, position: 'end', formatter: 'Severe warning' } }
+	          		},
+	          		{ xAxis: data[data.length - 1].value[0], yAxis: feature.properties.trigger_levels.severe_warning }
+							]
+				  	]
+					}
+        }
+			]
+		};
+
+		// use configuration item and data specified to show chart
+		myChart.setOption(option);
+	})
+}
 
 $( document ).on('turbolinks:load', function() {
   var map = L.map('map').setView([12.4031626,105.7709708], 7);
-																													 
+
   L.tileLayer('https://api.mapbox.com/styles/v1/pintiadmin/cjmhgktg36qla2sltkn1tik4n/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -51,9 +136,11 @@ $( document ).on('turbolinks:load', function() {
       pointToLayer: function (feature, latlng) {
 				if(feature.properties.status == 'active')
         	return L.marker(latlng, {icon: greenIcon});
-				if(feature.properties.status == 'danger')
+				if(feature.properties.status == 'watch')
         	return L.marker(latlng, {icon: yellowIcon});
-				if(feature.properties.status == 'alarm')
+				if(feature.properties.status == 'warning')
+        	return L.marker(latlng, {icon: orangeIcon});
+				if(feature.properties.status == 'severe_warning')
         	return L.marker(latlng, {icon: redIcon});
 				if(feature.properties.status == 'inactive')
         	return L.marker(latlng, {icon: greyIcon});
@@ -61,15 +148,14 @@ $( document ).on('turbolinks:load', function() {
         	return L.marker(latlng, {icon: blueIcon});
       },
 			onEachFeature(feature, layer) {
-				var last6 = "View Table - Last 6 hours" ;
-				var layout = "<iframe id='iframe'  frameBorder='0' src='<%= asset_path( 'sensorGraph.html' ) %>'></iframe>";
-				var last30 = "View Table - Last 30 days";
-				var popupContent = "<p>" + layout + last6 + "</br>"+ last30 +"</p>";
-				layer.bindPopup(popupContent);
-			
+				layer
+					.bindPopup("<div class='popup_river_level' id='popup-" + feature.properties.external_id + "'></div>", {
+						maxWidth: '100%'
+					})
+					.on('popupopen', function(event) {
+						showSensorGraph(event.popup._source.feature)
+					})
 			}
     }).addTo(map)
   })
 });
-
-

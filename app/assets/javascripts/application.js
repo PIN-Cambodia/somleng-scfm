@@ -24,6 +24,7 @@
 //= require activestorage
 //= require cocoon
 //= require turbolinks
+//= require echarts
 //= require_tree .
 
 var Page,

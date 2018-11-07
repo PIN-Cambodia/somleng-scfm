@@ -12,7 +12,7 @@ class Api::ContactDataController < Api::BaseController
   end
 
   def permitted_params
-    params.permit(:metadata_merge_mode, metadata: {})
+    params.permit(:created_at, :metadata_merge_mode, metadata: {})
   end
 
   def access_token_write_permissions
