@@ -156,7 +156,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.1)
+    concurrent-ruby (1.1.3)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.4)
@@ -256,7 +256,7 @@ GEM
     mail_form (1.7.1)
       actionmailer (>= 3.2, < 6)
       activemodel (>= 3.2, < 6)
-    mapbox-gl-rails (0.50.0)
+    mapbox-gl-rails (0.51.0)
       railties (>= 3.2, < 6.0)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
