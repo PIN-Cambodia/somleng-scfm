@@ -45,7 +45,7 @@ let showSensorGraph = (feature) => {
 
 	$.get('/datapoints/sensor_events.json', {external_id: feature.properties.external_id, start: start, end: new Date()}, function(sensorRecentData) {
 		var data = sensorRecentData
-		
+
 		myChart.hideLoading();
 
 		// specify chart configuration item and data
@@ -70,7 +70,12 @@ let showSensorGraph = (feature) => {
 	      }
 	    },
 	    xAxis: { type: 'time'},
-	    yAxis: { type: 'value', boundaryGap: [0, '100%'], max: 'dataMax' },
+	    yAxis: {
+				type: 'value',
+				boundaryGap: [0, '100%'],
+				max: Math.max(...data.map(e => e.value[1]).concat(Math.floor(feature.properties.trigger_levels.severe_warning*1.1))),
+				min: 0
+			},
 	    series: [
 				{
 					name: 'Water Level',
