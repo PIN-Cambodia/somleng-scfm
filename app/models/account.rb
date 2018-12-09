@@ -106,6 +106,12 @@ class Account < ApplicationRecord
 
   private
 
+  def set_call_flow_logic
+    return if call_flow_logic.present?
+
+    self.call_flow_logic = DEFAULT_CALL_FLOW_LOGIC
+  end
+
   def platform_configuration(key)
     read_attribute("#{platform_provider_name}_#{key}")
   end
