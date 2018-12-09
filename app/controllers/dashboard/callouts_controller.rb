@@ -28,6 +28,7 @@ class Dashboard::CalloutsController < Dashboard::BaseController
     params.fetch(:callout, {}).permit(
       :call_flow_logic,
       :audio_file,
+      :audio_url,
       commune_ids: []
     ).merge(created_by: current_user)
   end

@@ -25,6 +25,9 @@ class Callout < ApplicationRecord
   include PumiHelpers
   prepend ActiveStorageDirty
 
+  store_accessor :settings
+  accepts_nested_key_value_fields_for :settings
+
   belongs_to :account
   belongs_to :sensor_event, optional: true
 

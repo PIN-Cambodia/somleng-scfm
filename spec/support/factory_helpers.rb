@@ -5,11 +5,15 @@ module FactoryHelpers
     create(:callout_participation, { callout: callout, contact: contact }.merge(options))
   end
 
-  def create_phone_call(account:, **options)
+  def create_phone_call(*args)
+    options = args.extract_options!
+    account = options.delete(:account)
+    raise(ArgumentError, "Missing account") if account.blank?
+
     callout_participation = options.delete(:callout_participation) || create_callout_participation(
       account: account
     )
-    create(:phone_call, callout_participation: callout_participation, **options)
+    create(:phone_call, *args, callout_participation: callout_participation, **options)
   end
 
   def create_remote_phone_call_event(account:, **options)
@@ -29,8 +33,5 @@ module FactoryHelpers
 end
 
 RSpec.configure do |config|
-  config.include(FactoryHelpers, type: :system)
-  config.include(FactoryHelpers, type: :model)
-  config.include(FactoryHelpers, type: :request)
-  config.include(FactoryHelpers, type: :job)
+  config.include(FactoryHelpers)
 end

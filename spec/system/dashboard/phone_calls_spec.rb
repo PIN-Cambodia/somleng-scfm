@@ -38,6 +38,7 @@ RSpec.describe "Phone Calls" do
 
       expect(page).to have_sortable_column("msisdn")
       expect(page).to have_sortable_column("status")
+      expect(page).to have_sortable_column("duration")
       expect(page).to have_sortable_column("created_at")
     end
   end
@@ -162,6 +163,7 @@ RSpec.describe "Phone Calls" do
       expect(page).to have_content("Contact")
       expect(page).to have_content("Direction")
       expect(page).to have_content("Status")
+      expect(page).to have_content("Duration")
       expect(page).to have_content("Callout participation")
       expect(page).to have_content("Callout")
       expect(page).to have_content("Call flow")
@@ -228,9 +230,8 @@ RSpec.describe "Phone Calls" do
   it "can fetch the remote status of a phone call" do
     user = create(:user)
     phone_call = create_phone_call(
-      account: user.account,
-      status: PhoneCall::STATE_REMOTELY_QUEUED,
-      remote_call_id: SecureRandom.uuid
+      :remotely_queued,
+      account: user.account
     )
 
     sign_in(user)
@@ -242,7 +243,7 @@ RSpec.describe "Phone Calls" do
       }.to enqueue_job(FetchRemoteCallJob).with(phone_call.id)
     end
 
-    expect(phone_call.reload).to be_remote_fetch_queued
+    expect(phone_call.reload).to be_remotely_queued
     expect(page).to have_text("Event was successfully created.")
   end
 end

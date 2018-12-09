@@ -14,21 +14,25 @@ class CallFlowLogic::Base
   end
 
   def event
-    options[:event]
+    options.fetch(:event)
   end
 
   def current_url
-    options[:current_url]
+    options.fetch(:current_url)
   end
 
   def run!
     event&.phone_call_complete!
   end
 
-  def no_response
-    Twilio::TwiML::VoiceResponse.new do |response|
-      response.say(message: "Sorry. The application has no response. Goodbye.")
-    end.to_s
+  def remote_request_params
+    phone_call.remote_request_params.merge("to" => phone_call.msisdn)
+  end
+
+  private
+
+  def phone_call
+    options.fetch(:phone_call)
   end
 end
 

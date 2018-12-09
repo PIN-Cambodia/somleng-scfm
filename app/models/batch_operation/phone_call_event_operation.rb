@@ -11,20 +11,24 @@ class BatchOperation::PhoneCallEventOperation < BatchOperation::PhoneCallOperati
             unless: :skip_validate_preview_presence?
 
   def run!
-    phone_calls_preview.find_each do |phone_call|
+    # Using find_each will override random order
+    phone_calls_preview.each do |phone_call|
       phone_call.subscribe(PhoneCallObserver.new)
-      set_batch_operation(phone_call)
+      assign_batch_operation(phone_call)
+      phone_call.save!
       fire_event!(phone_call)
     end
   end
 
   def phone_calls_preview
-    preview.phone_calls(scope: account.phone_calls).limit(applied_limit)
+    preview.phone_calls(
+      scope: account.phone_calls
+    ).order(Arel.sql("RANDOM()")).limit(applied_limit)
   end
 
   private
 
   def preview
-    @preview ||= Preview::PhoneCallEventOperation.new(previewable: self)
+    Preview::PhoneCallEventOperation.new(previewable: self)
   end
 end

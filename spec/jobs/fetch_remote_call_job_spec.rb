@@ -1,40 +1,57 @@
 require "rails_helper"
 
 RSpec.describe FetchRemoteCallJob do
-  include_examples("aws_sqs_queue_url")
-
   describe "#perform" do
-    it "fetches the remote call" do
-      phone_call = create_phone_call(account: account)
+    it "updates the remote status of the call" do
+      account = create(:account, :with_twilio_provider)
+      phone_call = create_phone_call(:in_progress, account: account)
       stub_twilio_request(
         account: account,
         phone_call: phone_call,
-        response: { body: { "status" => "completed" }.to_json }
+        response: { body: { "status" => "in-progress" }.to_json }
       )
+      job = described_class.new
 
-      subject.perform(phone_call.id)
+      job.perform(phone_call.id)
 
       phone_call.reload
       assert_request_made!(account: account)
-      expect(phone_call.remote_response.fetch("status")).to eq("completed")
+      expect(phone_call.remote_response).to be_present
+      expect(phone_call.remote_status).to eq("in-progress")
+      expect(phone_call).to be_in_progress
+    end
+
+    it "completes a call" do
+      account = create(:account, :with_twilio_provider)
+      phone_call = create_phone_call(:in_progress, account: account)
+      stub_twilio_request(
+        account: account,
+        phone_call: phone_call,
+        response: { body: { "status" => "completed", "duration" => "87" }.to_json }
+      )
+      job = described_class.new
+
+      job.perform(phone_call.id)
+
+      phone_call.reload
+      expect(phone_call.remote_response).to be_present
+      expect(phone_call.duration).to eq(87)
       expect(phone_call).to be_completed
     end
 
-    let(:account) { create(:account, :with_twilio_provider) }
+    it "returns if there is no remote call id" do
+      account = create(:account)
+      phone_call = create_phone_call(:created, account: account)
+      job = described_class.new
+
+      job.perform(phone_call.id)
+
+      expect(phone_call).to be_created
+    end
 
     def assert_request_made!(account:)
       authorization = authorization_header(request: WebMock.requests.last)
       expect(authorization).to eq("#{account.twilio_account_sid}:#{account.twilio_auth_token}")
-    end
-
-    def create_phone_call(account:, **options)
-      remote_call_id = SecureRandom.uuid
-      super(
-        account: account,
-        status: PhoneCall::STATE_REMOTE_FETCH_QUEUED,
-        remote_call_id: remote_call_id,
-        **options
-      )
     end
 
     def stub_twilio_request(account:, phone_call:, response:)

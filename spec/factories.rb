@@ -5,16 +5,18 @@ FactoryBot.define do
     Hash[Twilio::REST::Client.new.api.account.calls.method(:create).parameters.map { |param| [param[1].to_s, param[1].to_s] }]
   end
 
+  sequence(:remote_call_id) { |_n| SecureRandom.uuid }
+
   sequence :twilio_remote_call_event_details do
     {
-      "CallSid" => SecureRandom.uuid,
-      "From" => FactoryBot.generate(:somali_msisdn),
-      "To" => "345",
-      "CallStatus" => "completed",
-      "Direction" => "inbound",
-      "AccountSid" => SecureRandom.uuid,
-      "ApiVersion" => "2010-04-01",
-      "Digits" => "5"
+      CallSid: SecureRandom.uuid,
+      From: FactoryBot.generate(:somali_msisdn),
+      To: "345",
+      CallStatus: "completed",
+      Direction: "inbound",
+      AccountSid: SecureRandom.uuid,
+      ApiVersion: "2010-04-01",
+      Digits: "5"
     }
   end
 
@@ -90,6 +92,14 @@ FactoryBot.define do
     trait :preview do
     end
 
+    trait :queued do
+      status { BatchOperation::Base::STATE_QUEUED }
+    end
+
+    trait :finished do
+      status { BatchOperation::Base::STATE_FINISHED }
+    end
+
     factory :callout_population, aliases: [:batch_operation], class: BatchOperation::CalloutPopulation do
       after(:build) do |callout_population|
         callout_population.callout ||= build(:callout, account: callout_population.account)
@@ -130,6 +140,32 @@ FactoryBot.define do
       msisdn { generate(:somali_msisdn) }
       remote_direction { PhoneCall::TWILIO_DIRECTIONS[:inbound] }
     end
+
+    trait :created do
+      status { PhoneCall::STATE_CREATED }
+    end
+
+    trait :completed do
+      status { PhoneCall::STATE_COMPLETED }
+    end
+
+    trait :failed do
+      status { PhoneCall::STATE_FAILED }
+    end
+
+    trait :in_progress do
+      status { PhoneCall::STATE_IN_PROGRESS }
+      remote_call_id
+    end
+
+    trait :remotely_queued do
+      status { PhoneCall::STATE_REMOTELY_QUEUED }
+      remote_call_id
+    end
+
+    trait :queued do
+      status { PhoneCall::STATE_QUEUED }
+    end
   end
 
   factory :remote_phone_call_event do
@@ -138,15 +174,15 @@ FactoryBot.define do
     end
 
     details { generate(:twilio_remote_call_event_details) }
-    remote_call_id { details["CallSid"] }
-    remote_direction { details["Direction"] }
+    remote_call_id { details[:CallSid] }
+    remote_direction { details[:Direction] }
     call_flow_logic { Account::DEFAULT_CALL_FLOW_LOGIC }
 
     after(:build) do |remote_phone_call_event, evaluator|
       if evaluator.build_phone_call
         remote_phone_call_event.phone_call ||= build(
           :phone_call,
-          msisdn: remote_phone_call_event.details["From"],
+          msisdn: remote_phone_call_event.details[:From],
           remote_call_id: remote_phone_call_event.remote_call_id,
           remote_direction: remote_phone_call_event.remote_direction
         )
@@ -163,6 +199,12 @@ FactoryBot.define do
       platform_provider_name { "twilio" }
       twilio_account_sid
       twilio_auth_token { generate(:auth_token) }
+    end
+
+    trait :with_somleng_provider do
+      platform_provider_name { "somleng" }
+      somleng_account_sid
+      somleng_auth_token { generate(:auth_token) }
     end
 
     trait :super_admin do
