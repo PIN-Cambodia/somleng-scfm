@@ -78,6 +78,7 @@ km:
     call_flow_logic: វិធីសាស្រ្តការហៅចេញ
     commune_ids: ឃុំ
     created_at: បង្កើតនៅពេល
+    duration: រយៈ (វិនាទី)
     metadata: ទិន្នន័យបន្ថែម
     msisdn: លេខទូរស័ព​្ទ
     province_id: ខេត្ត

@@ -78,6 +78,7 @@ en:
     call_flow_logic: Call flow
     commune_ids: Communes
     created_at: Created at
+    duration: Duration (seconds)
     metadata: Metadata
     msisdn: Phone number
     province_id: Province

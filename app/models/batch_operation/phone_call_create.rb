@@ -21,13 +21,16 @@ class BatchOperation::PhoneCallCreate < BatchOperation::PhoneCallOperation
   hash_store_reader :remote_request_params
 
   def run!
-    callout_participations_preview.find_each do |callout_participation|
+    # Using find_each here will override the random order
+    callout_participations_preview.each do |callout_participation|
       create_phone_call(callout_participation)
     end
   end
 
   def callout_participations_preview
-    preview.callout_participations(scope: account.callout_participations).limit(applied_limit)
+    preview.callout_participations(
+      scope: account.callout_participations
+    ).order(Arel.sql("RANDOM()")).limit(applied_limit)
   end
 
   def contacts_preview
@@ -41,7 +44,7 @@ class BatchOperation::PhoneCallCreate < BatchOperation::PhoneCallOperation
   end
 
   def preview
-    @preview ||= Preview::PhoneCallCreate.new(previewable: self)
+    Preview::PhoneCallCreate.new(previewable: self)
   end
 
   def create_phone_call(callout_participation)

@@ -65,6 +65,14 @@ class Account < ApplicationRecord
               in: PLATFORM_PROVIDERS
             }, allow_nil: true
 
+  validates :twilio_account_sid, :somleng_account_sid,
+            uniqueness: { case_sensitive: false },
+            allow_nil: true
+
+  before_validation :set_call_flow_logic, on: :create
+
+  strip_attributes
+
   def super_admin?
     permissions?(:super_admin)
   end
@@ -97,6 +105,12 @@ class Account < ApplicationRecord
   end
 
   private
+
+  def set_call_flow_logic
+    return if call_flow_logic.present?
+
+    self.call_flow_logic = DEFAULT_CALL_FLOW_LOGIC
+  end
 
   def platform_configuration(key)
     read_attribute("#{platform_provider_name}_#{key}")

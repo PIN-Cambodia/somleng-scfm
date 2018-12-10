@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_13_012005) do
+ActiveRecord::Schema.define(version: 2018_12_03_113804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 2018_07_13_012005) do
     t.bigint "account_id", null: false
     t.string "audio_url"
     t.bigint "sensor_event_id"
+    t.jsonb "settings", default: {}, null: false
     t.index ["account_id"], name: "index_callouts_on_account_id"
     t.index ["sensor_event_id"], name: "index_callouts_on_sensor_event_id"
   end
@@ -174,6 +175,9 @@ ActiveRecord::Schema.define(version: 2018_07_13_012005) do
     t.datetime "remotely_queued_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "duration", default: 0, null: false
+    t.integer "lock_version", default: 0, null: false
+    t.index ["callout_participation_id", "status"], name: "index_phone_calls_on_callout_participation_id_and_status", unique: true, where: "((status)::text = 'created'::text)"
     t.index ["callout_participation_id"], name: "index_phone_calls_on_callout_participation_id"
     t.index ["contact_id"], name: "index_phone_calls_on_contact_id"
     t.index ["create_batch_operation_id"], name: "index_phone_calls_on_create_batch_operation_id"
@@ -191,6 +195,7 @@ ActiveRecord::Schema.define(version: 2018_07_13_012005) do
     t.string "call_flow_logic", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "call_duration", default: 0, null: false
     t.index ["phone_call_id"], name: "index_remote_phone_call_events_on_phone_call_id"
   end
 

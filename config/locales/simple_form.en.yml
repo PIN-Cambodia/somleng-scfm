@@ -53,6 +53,8 @@ en:
         call_flow_logic:
           CallFlowLogic::HelloWorld: Hello World
           CallFlowLogic::PlayMessage: Emergency Message
+          CallFlowLogic::PlayMessageStartRapidproFlow: Play Message and Start RapidPro Flow
+          CallFlowLogic::Simulation: Simulation
     prompts:
       defaults:
         commune_id: Select a commune

@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe Account do
   let(:factory) { :account }
+
   include_examples "has_metadata"
   include_examples "has_call_flow_logic"
 
@@ -20,19 +21,23 @@ RSpec.describe Account do
   end
 
   describe "validations" do
+    it { expect(build(:account)).to be_valid }
     it { is_expected.to validate_inclusion_of(:platform_provider_name).in_array(%w[twilio somleng]) }
+    it { expect(create(:account, :with_twilio_provider)).to validate_uniqueness_of(:twilio_account_sid).case_insensitive.allow_nil }
+    it { expect(create(:account, :with_somleng_provider)).to validate_uniqueness_of(:somleng_account_sid).case_insensitive.allow_nil }
   end
 
-  describe "defaults" do
-    subject { create(factory) }
+  it { is_expected.to strip_attribute(:twilio_account_sid) }
+  it { is_expected.to strip_attribute(:somleng_account_sid) }
 
-    it { expect(subject.permissions).to be_empty }
-    it { expect(subject.call_flow_logic).to eq(Account::DEFAULT_CALL_FLOW_LOGIC) }
-    it { expect(subject.sensor_rule_run_interval_in_hours).to eq(nil) }
-  end
+  it "sets the default settings and permissions" do
+    account = build(:account)
 
-  describe "#settings" do
-    it { expect(subject.settings).to eq({}) }
+    account.save!
+
+    expect(account.permissions).to be_empty
+    expect(account.settings).to eq({})
+    expect(account.sensor_rule_run_interval_in_hours).to eq(nil)
   end
 
   describe "#write_batch_operation_access_token" do
@@ -74,17 +79,20 @@ RSpec.describe Account do
 
     context "given a Twilio account SID" do
       let(:account_sid) { twilio_account_sid }
+
       it { assert_results! }
     end
 
     context "given a Somleng account SID" do
       let(:account_sid) { somleng_account_sid }
+
       it { assert_results! }
     end
 
     context "given an account SID which doesn't match any accounts" do
       let(:asserted_results) { [] }
       let(:account_sid) { SecureRandom.hex }
+
       it { assert_results! }
     end
   end

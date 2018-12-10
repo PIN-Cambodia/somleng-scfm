@@ -17,11 +17,14 @@
 !/log/.keep
 !/tmp/.keep
 
+# Ignore uploaded files in development
+/storage/*
+!/storage/.keep
+
 /node_modules
 /node
 /yarn-error.log
 
-remove_focus.rb
 install
 vendor/ruby
 
@@ -40,4 +43,8 @@ examples.txt
 
 # Terraform
 .terraform
+
 public/assets
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key

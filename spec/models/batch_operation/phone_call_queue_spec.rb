@@ -5,12 +5,7 @@ RSpec.describe BatchOperation::PhoneCallQueue do
 
   include_examples("batch_operation")
   include_examples("phone_call_operation_batch_operation")
-
-  include_examples("phone_call_event_operation_batch_operation") do
-    let(:asserted_status_after_run) { PhoneCall::STATE_QUEUED }
-    let(:invalid_transition_status) { PhoneCall::STATE_QUEUED }
-    let(:phone_call_factory_attributes) { { status: PhoneCall::STATE_CREATED } }
-  end
+  include_examples("phone_call_event_operation_batch_operation")
 
   describe "#parameters" do
     it "is valid when there is a phone call to preview " do
@@ -40,5 +35,52 @@ RSpec.describe BatchOperation::PhoneCallQueue do
         account.settings.fetch("batch_operation_phone_call_queue_parameters")
       )
     end
+  end
+
+  describe "#phone_calls_preview" do
+    it "selects phone calls in a random order" do
+      batch_operation = create(:phone_call_queue_batch_operation)
+      phone_calls = create_phone_calls(account: batch_operation.account)
+
+      results = []
+      100.times do
+        results = batch_operation.phone_calls_preview
+        break results unless results == phone_calls
+      end
+
+      expect(results).to match_array(phone_calls)
+      expect(results).not_to eq(phone_calls)
+    end
+  end
+
+  describe "#run!" do
+    it "queues the phone calls in a random order" do
+      batch_operation = nil
+      phone_calls = []
+      applied_phone_calls = []
+
+      100.times do
+        batch_operation = create(:phone_call_queue_batch_operation)
+        phone_calls = create_phone_calls(:created, account: batch_operation.account)
+
+        batch_operation.run!
+
+        applied_phone_calls = batch_operation.phone_calls.order(:updated_at)
+
+        break unless applied_phone_calls == phone_calls
+      end
+
+      expect(applied_phone_calls).to match_array(phone_calls)
+      expect(applied_phone_calls).not_to eq(phone_calls)
+      expect(phone_calls.first.reload).to be_queued
+    end
+  end
+
+  def create_phone_calls(*args, **options)
+    results = []
+    2.times do
+      results << create_phone_call(*args, **options)
+    end
+    results
   end
 end

@@ -142,54 +142,54 @@ RSpec.describe "Remote Phone Call Events" do
     expect(response.code).to eq("201")
     expect(response.headers).not_to have_key("Location")
     created_event = RemotePhoneCallEvent.last!
-    expect(created_event.details).to eq(request_body)
+    expect(created_event.details).to eq(request_body.stringify_keys)
     expect(created_event.call_flow_logic).to eq(CallFlowLogic::HelloWorld.to_s)
     created_phone_call = created_event.phone_call
     expect(created_phone_call.call_flow_logic).to eq(CallFlowLogic::HelloWorld.to_s)
     expect(created_phone_call.status).to eq(PhoneCall::STATE_IN_PROGRESS.to_s)
-    expect(created_phone_call.remote_call_id).to eq(request_body.fetch("CallSid"))
-    expect(created_phone_call.remote_status).to eq(request_body.fetch("CallStatus"))
-    expect(created_phone_call.remote_direction).to eq(request_body.fetch("Direction"))
+    expect(created_phone_call.remote_call_id).to eq(request_body.fetch(:CallSid))
+    expect(created_phone_call.remote_status).to eq(request_body.fetch(:CallStatus))
+    expect(created_phone_call.remote_direction).to eq(request_body.fetch(:Direction))
     created_contact = created_phone_call.contact
-    expect(created_contact.msisdn).to eq(request_body.fetch("From"))
+    expect(created_contact.msisdn).to eq(request_body.fetch(:From))
     expect(response.body).to eq(CallFlowLogic::HelloWorld.new.to_xml)
   end
 
   it "can create a remote phone call event for an outbound call" do
     account = create(:account, :with_twilio_provider)
-
-    phone_call = create_phone_call(
-      account: account,
-      status: PhoneCall::STATE_REMOTELY_QUEUED,
-      remote_call_id: SecureRandom.uuid
-    )
+    phone_call = create_phone_call(:remotely_queued, account: account)
 
     request_body = build_request_body(
       call_sid: phone_call.remote_call_id,
       account_sid: account.twilio_account_sid,
       direction: "outbound-api",
-      call_status: "ringing",
+      call_status: "completed",
       from: "1294",
-      to: phone_call.msisdn
+      to: phone_call.msisdn,
+      call_duration: "87"
     )
 
-    post(
-      api_remote_phone_call_events_url,
-      params: request_body,
-      headers: build_twilio_signature(
-        auth_token: account.twilio_auth_token,
-        url: api_remote_phone_call_events_url,
-        request_body: request_body
+    perform_enqueued_jobs do
+      post(
+        api_remote_phone_call_events_url,
+        params: request_body,
+        headers: build_twilio_signature(
+          auth_token: account.twilio_auth_token,
+          url: api_remote_phone_call_events_url,
+          request_body: request_body
+        )
       )
-    )
+    end
 
     expect(response.code).to eq("201")
     created_event = RemotePhoneCallEvent.last!
     expect(created_event.phone_call).to eq(phone_call)
+    expect(created_event.call_duration).to eq(87)
     phone_call.reload
-    expect(phone_call.status).to eq(PhoneCall::STATE_IN_PROGRESS.to_s)
+    expect(phone_call).to be_completed
     expect(phone_call.call_flow_logic).to eq(CallFlowLogic::HelloWorld.to_s)
-    expect(phone_call.remote_status).to eq(request_body.fetch("CallStatus"))
+    expect(phone_call.remote_status).to eq(request_body.fetch(:CallStatus))
+    expect(phone_call.duration).to eq(87)
     expect(response.body).to eq(CallFlowLogic::HelloWorld.new.to_xml)
   end
 
@@ -247,15 +247,36 @@ RSpec.describe "Remote Phone Call Events" do
     expect(response.code).to eq("422")
   end
 
+  it "handles schema validation errors" do
+    account = create(:account, :with_twilio_provider)
+    request_body = build_request_body(
+      account_sid: account.twilio_account_sid,
+      call_sid: nil
+    )
+
+    post(
+      api_remote_phone_call_events_url,
+      params: request_body,
+      headers: build_twilio_signature(
+        auth_token: account.twilio_auth_token,
+        url: api_remote_phone_call_events_url,
+        request_body: request_body
+      )
+    )
+
+    expect(response.code).to eq("422")
+  end
+
   def build_request_body(options)
     {
-      "CallSid" => options.fetch(:call_sid) { SecureRandom.uuid },
-      "From" => options.fetch(:from) { "+85510202101" },
-      "To" => options.fetch(:to) { "345" },
-      "Direction" => options.fetch(:direction) { "inbound" },
-      "CallStatus" => options.fetch(:call_status) { "in-progress" },
-      "AccountSid" => options.fetch(:account_sid)
-    }
+      CallSid: options.fetch(:call_sid) { SecureRandom.uuid },
+      From: options.fetch(:from) { "+85510202101" },
+      To: options.fetch(:to) { "345" },
+      Direction: options.fetch(:direction) { "inbound" },
+      CallStatus: options.fetch(:call_status) { "in-progress" },
+      AccountSid: options.fetch(:account_sid),
+      CallDuration: options.fetch(:call_duration) { nil }
+    }.compact
   end
 
   def build_twilio_signature(auth_token:, url:, request_body:)

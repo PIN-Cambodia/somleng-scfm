@@ -16,12 +16,7 @@ Rails.application.configure do
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
-  # config.require_master_key = true
-
-  # Attempt to read encrypted secrets from `config/secrets.yml.enc`.
-  # Requires an encryption key in `ENV["RAILS_MASTER_KEY"]` or
-  # `config/secrets.yml.key`.
-  config.read_encrypted_secrets = true
+  config.require_master_key = true
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
@@ -71,8 +66,8 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   require Rails.root.join("app/jobs/application_job")
-  config.action_mailer.deliver_later_queue_name = ApplicationJob.aws_sqs_queue_name(:action_mailer_delivery_job)
-  config.active_storage.queue = ApplicationJob.aws_sqs_queue_name(:active_storage_job)
+  config.action_mailer.deliver_later_queue_name = ApplicationJob.default_queue_name
+  config.active_storage.queue = ApplicationJob.default_queue_name
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -101,25 +96,23 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  Rails.application.routes.default_url_options[:host] = Rails.application.secrets.fetch(:default_url_host)
+  Rails.application.routes.default_url_options[:host] = Rails.configuration.app_settings.fetch("default_url_host")
 
   config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.fetch(:default_url_host),
+    host: Rails.configuration.app_settings.fetch("default_url_host"),
     protocol: "https"
   }
 
-  config.action_mailer.delivery_method = Rails.application.secrets.fetch(
-    :action_mailer_delivery_method
-  ).to_sym
+  config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.smtp_settings = {
-    address: Rails.application.secrets.fetch(:smtp_address),
-    port: Rails.application.secrets.fetch(:smtp_port).to_i,
-    user_name: Rails.application.secrets.fetch(:smtp_username),
-    password: Rails.application.secrets.fetch(:smtp_password),
-    authentication: Rails.application.secrets.fetch(:smtp_authentication_method).to_sym,
-    enable_starttls_auto: Rails.application.secrets.fetch(:smtp_enable_starttls_auto).to_i == 1
+    address: Rails.configuration.app_settings.fetch("smtp_address"),
+    port: Rails.configuration.app_settings.fetch("smtp_port").to_i,
+    user_name: Rails.configuration.app_settings.fetch("smtp_username"),
+    password: Rails.configuration.app_settings.fetch("smtp_password"),
+    authentication: Rails.configuration.app_settings.fetch("smtp_authentication_method").to_sym,
+    enable_starttls_auto:  Rails.configuration.app_settings.fetch("smtp_enable_starttls_auto")
   }
 
-  config.time_zone = Rails.application.secrets.fetch(:time_zone)
+  config.time_zone = Rails.configuration.app_settings.fetch("time_zone")
 end
