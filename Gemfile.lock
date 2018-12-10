@@ -7,9 +7,9 @@ GIT
 
 GIT
   remote: https://github.com/davidcelis/api-pagination.git
-  revision: cfd0946e8fae89c6f806af7a1b75484920360dab
+  revision: df0519936951af77fccd76a8da87d48287d603d6
   specs:
-    api-pagination (4.8.1)
+    api-pagination (4.8.2)
 
 GIT
   remote: https://github.com/dwilkie/pumi.git
@@ -99,8 +99,8 @@ GEM
     autoprefixer-rails (9.1.4)
       execjs
     aws-eventstream (1.0.1)
-    aws-partitions (1.121.0)
-    aws-sdk-core (3.42.0)
+    aws-partitions (1.122.0)
+    aws-sdk-core (3.44.0)
       aws-eventstream (~> 1.0)
       aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.0)
@@ -108,7 +108,7 @@ GEM
     aws-sdk-kms (1.13.0)
       aws-sdk-core (~> 3, >= 3.39.0)
       aws-sigv4 (~> 1.0)
-    aws-sdk-s3 (1.29.0)
+    aws-sdk-s3 (1.30.0)
       aws-sdk-core (~> 3, >= 3.39.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.0)
@@ -385,7 +385,7 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    rubocop (0.60.0)
+    rubocop (0.61.1)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)

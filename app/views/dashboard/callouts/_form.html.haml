@@ -1,6 +1,10 @@
 .card
   .card-body
     = simple_form_for([:dashboard, resource]) do |f|
+      - if current_user.admin?
+        = f.input :call_flow_logic, collection: [CallFlowLogic::PlayMessage.to_s.to_sym, CallFlowLogic::Simulation.to_s.to_sym], as: :radio_buttons
+      - else
+        = f.input :call_flow_logic, as: :hidden
       = f.input :audio_file, as: :file, input_html: { direct_upload: true, accept: Callout::AUDIO_CONTENT_TYPES.join(", ") }
       = f.input :province_id, collection: [], prompt: true, required: true,
                 wrapper_html: { id: 'province' },
@@ -19,7 +23,6 @@
       %label.form-check-label{ for: 'all-communes' }
         = translate(:"titles.actions.select_all")
       #districts-communes
-      = f.input :call_flow_logic, as: :hidden
       .form-group.actions
         = f.button :submit, class: 'btn btn-primary'
         = link_to(translate(:"titles.actions.cancel"), :back, class: 'btn btn-outline-dark')

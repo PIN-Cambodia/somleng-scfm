@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_03_113804) do
+ActiveRecord::Schema.define(version: 2018_12_10_055118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,7 +93,9 @@ ActiveRecord::Schema.define(version: 2018_12_03_113804) do
     t.string "audio_url"
     t.bigint "sensor_event_id"
     t.jsonb "settings", default: {}, null: false
+    t.bigint "created_by_id"
     t.index ["account_id"], name: "index_callouts_on_account_id"
+    t.index ["created_by_id"], name: "index_callouts_on_created_by_id"
     t.index ["sensor_event_id"], name: "index_callouts_on_sensor_event_id"
   end
 
@@ -276,6 +278,7 @@ ActiveRecord::Schema.define(version: 2018_12_03_113804) do
   add_foreign_key "callout_participations", "contacts"
   add_foreign_key "callouts", "accounts"
   add_foreign_key "callouts", "sensor_events"
+  add_foreign_key "callouts", "users", column: "created_by_id"
   add_foreign_key "contacts", "accounts"
   add_foreign_key "oauth_access_grants", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"

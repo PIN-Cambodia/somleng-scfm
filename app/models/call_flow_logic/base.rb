@@ -2,7 +2,7 @@ class CallFlowLogic::Base
   attr_accessor :options
 
   def self.registered
-    @registered ||= descendants.reject(&:abstract_class?).map(&:to_s)
+    descendants.reject(&:abstract_class?).map(&:to_s)
   end
 
   def self.abstract_class?

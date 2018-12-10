@@ -46,7 +46,6 @@ RSpec.describe "Callouts", :aggregate_failures do
 
     attach_file("Audio file", Rails.root + file_fixture("test.mp3"))
     select_commune
-
     expect do
       click_action_button(:create, key: :submit, namespace: :helpers, model: "Callout")
       expect(page).to have_text("Callout was successfully created.")
@@ -55,9 +54,24 @@ RSpec.describe "Callouts", :aggregate_failures do
     new_callout = Callout.first
     expect(new_callout.audio_file).to be_attached
     expect(new_callout.call_flow_logic).to eq(CallFlowLogic::PlayMessage.to_s)
+    expect(new_callout.created_by).to eq(user)
     callout_population = new_callout.callout_population
     expect(callout_population).to be_present
     expect(callout_population.contact_filter_params[:has_locations_in]).to eq(new_callout.commune_ids)
+  end
+
+  it "admin can create a simulation", :js do
+    user = create(:admin)
+
+    sign_in(user)
+    visit(new_dashboard_callout_path)
+    attach_file("Audio file", Rails.root + file_fixture("test.mp3"))
+    choose("Simulation")
+    select_commune
+    click_action_button(:create, key: :submit, namespace: :helpers, model: "Callout")
+
+    expect(page).to have_text("Callout was successfully created.")
+    expect(Callout.first.call_flow_logic).to eq(CallFlowLogic::Simulation.to_s)
   end
 
   it "autoselects the user's province" do
@@ -118,6 +132,7 @@ RSpec.describe "Callouts", :aggregate_failures do
       account: user.account,
       sensor_event: sensor_event,
       call_flow_logic: CallFlowLogic::HelloWorld,
+      created_by: user,
       audio_file: "test.mp3",
       audio_url: "https://example.com/audio.mp3"
     )
@@ -157,6 +172,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     within("#callout") do
       expect(page).to have_content(callout.id)
       expect(page).to have_link(callout.audio_url, href: callout.audio_url)
+      expect(page).to have_link(callout.created_by_id, href: dashboard_user_path(callout.created_by))
       expect(page).to have_link(callout.sensor_event_id, href: dashboard_sensor_event_path(sensor_event))
       expect(page).to have_content("Status")
       expect(page).to have_content("Initialized")
