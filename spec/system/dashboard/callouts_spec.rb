@@ -55,9 +55,24 @@ RSpec.describe "Callouts", :aggregate_failures do
     new_callout = Callout.first
     expect(new_callout.audio_file).to be_attached
     expect(new_callout.call_flow_logic).to eq(CallFlowLogic::PlayMessage.to_s)
+    expect(new_callout.created_by).to eq(user)
     callout_population = new_callout.callout_population
     expect(callout_population).to be_present
     expect(callout_population.contact_filter_params[:has_locations_in]).to eq(new_callout.commune_ids)
+  end
+
+  it "admin can create a simulation", :js do
+    user = create(:admin)
+
+    sign_in(user)
+    visit(new_dashboard_callout_path)
+    attach_file("Audio file", Rails.root + file_fixture("test.mp3"))
+    choose("Simulation")
+    select_commune
+    click_action_button(:create, key: :submit, namespace: :helpers, model: "Callout")
+
+    expect(page).to have_text("Callout was successfully created.")
+    expect(Callout.first.call_flow_logic).to eq(CallFlowLogic::Simulation.to_s)
   end
 
   it "autoselects the user's province" do

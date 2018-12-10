@@ -30,6 +30,7 @@ class Callout < ApplicationRecord
 
   belongs_to :account
   belongs_to :sensor_event, optional: true
+  belongs_to :created_by, class_name: "User", optional: true
 
   has_many :callout_participations, dependent: :restrict_with_error
 
@@ -53,8 +54,6 @@ class Callout < ApplicationRecord
   has_one_attached :audio_file
 
   alias_attribute :calls, :phone_calls
-
-  attr_accessor :created_by
 
   validates :call_flow_logic, :status, presence: true
 

@@ -27,6 +27,7 @@ class User < ApplicationRecord
 
   def remove_empty_province_ids
     return unless metadata.is_a?(Hash)
+
     self.province_ids = Array(province_ids).reject(&:blank?).presence
     metadata.compact!
   end
