@@ -14,6 +14,7 @@ class Callout < ApplicationRecord
     def audio_file_blob_changed?
       return false unless audio_file.attached?
       return false unless audio_file_will_change
+
       audio_file.blob != audio_file_blob_was
     end
   end
