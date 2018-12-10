@@ -35,7 +35,7 @@ deploy:
     branch: master
 - provider: elasticbeanstalk
   region: ap-southeast-1
-  app: somleng-scfm
+  app: scfm
   env: scfm-worker
   bucket_name: deploy.ews1294.info
   on:
