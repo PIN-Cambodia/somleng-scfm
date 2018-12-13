@@ -7,17 +7,16 @@ module "twilreapi_db" {
   source = "../modules/rds"
 
   env_identifier  = "${local.twilreapi_identifier}"
-  master_password = "${data.aws_kms_secret.this.twilreapi_db_master_password}"
+  master_password = "${data.aws_ssm_parameter.twilreapi_db_master_password.value}"
 
   vpc_id               = "${module.pin_vpc.vpc_id}"
-  db_subnet_group_name = "${aws_db_subnet_group.twilreapi.name}"
+  db_subnet_group_name = "${module.pin_vpc.database_subnet_group}"
 
-  # PIN Specific Options
-  identifier                 = "twilreapi-pin-production"
+  db_name                    = "twilreapi_pin_production"
   username                   = "twilreapi"
+  engine_version             = "9.5.10"
   security_group_name        = "rds-launch-wizard-1"
   security_group_description = "Created from the RDS Management Console"
-  engine_version             = "9.5.10"
   allocated_storage          = 20
 }
 

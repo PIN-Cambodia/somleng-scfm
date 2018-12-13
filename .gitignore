@@ -43,6 +43,7 @@ examples.txt
 
 # Terraform
 .terraform
+terraform.tfstate.*.backup
 
 public/assets
 

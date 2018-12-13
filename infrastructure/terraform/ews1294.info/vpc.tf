@@ -3,6 +3,7 @@ module "pin_vpc" {
   name   = "${local.vpc_name}"
 
   # PIN specific options
+  azs                  = "${local.vpc_azs}"
   cidr                 = "10.0.0.0/16"
   enable_dns_hostnames = true
   private_subnets      = ["10.0.3.0/24", "10.0.1.0/24", "10.0.5.0/24"]
