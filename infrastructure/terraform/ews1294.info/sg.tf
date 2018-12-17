@@ -71,3 +71,14 @@ resource "aws_security_group_rule" "somleng_adhearsion_old" {
 
   security_group_id = "${aws_security_group.freeswitch.id}"
 }
+
+resource "aws_security_group_rule" "somleng_adhearsion" {
+  type                     = "ingress"
+  from_port                = 5222
+  to_port                  = 5222
+  protocol                 = "tcp"
+  cidr_blocks              = ["0.0.0.0/0"]
+  description              = "Somleng-Adhearsion"
+
+  security_group_id = "${aws_security_group.freeswitch.id}"
+}
