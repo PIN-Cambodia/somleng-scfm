@@ -8,7 +8,6 @@ locals {
 }
 
 locals {
-  old_somleng_adhearsion_drb_host           = "druby://somleng-production.ap-southeast-1.elasticbeanstalk.com:9050"
   somleng_adhearsion_drb_host               = "druby://${module.route53_record_somleng_adhearsion.fqdn}:${local.somleng_adhearsion_drb_port}"
   somleng_freeswitch_xmpp_host              = "${module.route53_record_somleng_freeswitch.fqdn}"
   somleng_freeswitch_mod_rayo_password      = "${data.aws_ssm_parameter.freeswitch_mod_rayo_password.value}"
@@ -68,7 +67,7 @@ module "twilreapi_eb_app_env" {
   smtp_password        = "${module.ses.smtp_password}"
 
   ### Twilreapi Specific
-  outbound_call_drb_uri                     = "${local.old_somleng_adhearsion_drb_host}"
+  outbound_call_drb_uri                     = "${local.somleng_adhearsion_drb_host}"
   initiate_outbound_call_queue_url          = "${module.twilreapi_eb_outbound_call_worker_env.aws_sqs_queue_url}"
   twilreapi_internal_api_http_auth_user     = "${local.twilreapi_internal_api_http_auth_user}"
   twilreapi_internal_api_http_auth_password = "${local.twilreapi_internal_api_http_auth_password}"
@@ -116,7 +115,7 @@ module "twilreapi_eb_outbound_call_worker_env" {
   smtp_password               = "${module.ses.smtp_password}"
 
   ### Twilreapi Specific
-  outbound_call_drb_uri = "${local.old_somleng_adhearsion_drb_host}"
+  outbound_call_drb_uri = "${local.somleng_adhearsion_drb_host}"
 }
 
 module "twilreapi_deploy" {
