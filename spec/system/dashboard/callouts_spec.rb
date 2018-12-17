@@ -4,7 +4,13 @@ RSpec.describe "Callouts", :aggregate_failures do
   it "can list callouts" do
     user = create(:user)
     sensor_event = create_sensor_event(account: user.account)
-    callout = create(:callout, :initialized, sensor_event: sensor_event, account: user.account)
+    callout = create(
+      :callout,
+      :initialized,
+      sensor_event: sensor_event,
+      account: user.account,
+      call_flow_logic: CallFlowLogic::HelloWorld
+    )
     other_callout = create(:callout)
 
     sign_in(user)
@@ -33,6 +39,8 @@ RSpec.describe "Callouts", :aggregate_failures do
       expect(page).to have_content("Initialized")
       expect(page).to have_content("Sensor Event")
       expect(page).to have_content(callout.province_name_en)
+      expect(page).to have_sortable_column("call_flow_logic")
+      expect(page).to have_content("Hello World")
     end
   end
 
