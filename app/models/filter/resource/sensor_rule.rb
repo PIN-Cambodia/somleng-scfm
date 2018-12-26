@@ -1,7 +1,11 @@
-class Filter::Resource::SensorRule < Filter::Resource::Base
-  private
+module Filter
+  module Resource
+    class SensorRule < Filter::Resource::Base
+      private
 
-  def filter_params
-    params.slice(:sensor_id)
+      def filter_params
+        params.slice(:sensor_id)
+      end
+    end
   end
 end

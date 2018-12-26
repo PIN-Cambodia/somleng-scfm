@@ -1,10 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Filter::Resource::SensorEvent do
-  include SomlengScfm::SpecHelpers::FilterHelpers
-
   let(:filterable_factory) { :sensor_event }
-  let(:association_chain) { SensorEvent }
+  let(:association_chain) { SensorEvent.all }
 
   describe "#resources" do
     include_examples "timestamp_attribute_filter"

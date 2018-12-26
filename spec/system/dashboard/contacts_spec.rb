@@ -42,7 +42,7 @@ RSpec.describe "Contacts", :aggregate_failures do
 
     click_action_button(:create, key: :submit, namespace: :helpers, model: "Contact")
 
-    expect(page).to have_content("Phone number can't be blank")
+    expect(page).to have_content("Phone number must be filled")
 
     fill_in_contact_information(phone_number)
     fill_in_key_value_for(
@@ -96,7 +96,7 @@ RSpec.describe "Contacts", :aggregate_failures do
 
     click_action_button(:update, key: :submit, namespace: :helpers)
 
-    expect(current_path).to eq(dashboard_contact_path(contact))
+    expect(page).to have_current_path(dashboard_contact_path(contact))
     expect(page).to have_text("Contact was successfully updated.")
     contact = contact.reload
     expect(contact.msisdn).to match(updated_phone_number)

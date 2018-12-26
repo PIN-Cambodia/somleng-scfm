@@ -1,11 +1,15 @@
-class Filter::Resource::Contact < Filter::Resource::Msisdn
-  def self.attribute_filters
-    super << :has_locations_in
-  end
+module Filter
+  module Resource
+    class Contact < Filter::Resource::Msisdn
+      def self.attribute_filters
+        super << :has_locations_in
+      end
 
-  private
+      private
 
-  def has_locations_in
-    Filter::Scope::HasLocationsIn.new(options, params)
+      def has_locations_in
+        Filter::Scope::HasLocationsIn.new(options, params)
+      end
+    end
   end
 end

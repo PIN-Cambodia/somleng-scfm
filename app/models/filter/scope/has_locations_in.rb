@@ -1,15 +1,19 @@
-class Filter::Scope::HasLocationsIn < Filter::Base
-  def apply
-    association_chain.has_locations_in(commune_ids_params)
-  end
+module Filter
+  module Scope
+    class HasLocationsIn < Filter::Base
+      def apply
+        association_chain.has_locations_in(commune_ids_params)
+      end
 
-  def apply?
-    commune_ids_params.present?
-  end
+      def apply?
+        commune_ids_params.present?
+      end
 
-  private
+      private
 
-  def commune_ids_params
-    params[:has_locations_in]
+      def commune_ids_params
+        params[:has_locations_in]
+      end
+    end
   end
 end

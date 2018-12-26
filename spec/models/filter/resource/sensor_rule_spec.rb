@@ -1,10 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Filter::Resource::SensorRule do
-  include SomlengScfm::SpecHelpers::FilterHelpers
-
   let(:filterable_factory) { :sensor_rule }
-  let(:association_chain) { SensorRule }
+  let(:association_chain) { SensorRule.all }
 
   describe "#resources" do
     include_examples "timestamp_attribute_filter"
@@ -17,7 +15,7 @@ RSpec.describe Filter::Resource::SensorRule do
         }
       )
 
-      filter = described_class.new(association_chain: SensorRule)
+      filter = described_class.new(association_chain: ::SensorRule)
 
       filter.params = { sensor_id: sensor_rule.sensor_id }
       expect(filter.resources).to match_array([sensor_rule])

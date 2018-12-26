@@ -20,9 +20,6 @@ class Contact < ApplicationRecord
 
   before_validation :normalize_commune_ids
 
-  validates :msisdn,
-            uniqueness: { scope: :account_id }
-
   delegate :call_flow_logic,
            to: :account,
            allow_nil: true
