@@ -283,7 +283,7 @@ GEM
     mail_form (1.7.1)
       actionmailer (>= 3.2, < 6)
       activemodel (>= 3.2, < 6)
-    mapbox-gl-rails (0.52.0)
+    mapbox-gl-rails (0.53.0)
       railties (>= 3.2, < 6.0)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
