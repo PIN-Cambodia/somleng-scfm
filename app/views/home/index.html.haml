@@ -18,18 +18,16 @@
       .col-md-4.ews-stats-item
         %h2.stat-head.text-grey Registered Users
         %h2.stat-highlight.text-light
-          = @contacts 
-          %sup +
+          = number_with_delimiter(@contacts)
       .col-md-4.ews-stats-item
-        %h2.stat-head.text-grey Sensors Covered
-        %h2.stat-highlight.text-light 
+        %h2.stat-head.text-grey Sensors Active
+        %h2.stat-highlight.text-light
           = @sensors
       .col-md-4.ews-stats-item
         %h2.stat-head.text-grey Alerts Sent
         %h2.stat-highlight.text-light
-          = @call_participation
-          %sup +
-          
+          = number_with_delimiter(@call_participation)
+
 
 
 .container

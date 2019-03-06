@@ -7,11 +7,10 @@
           %b EWS 1294
           warns people in advance of natural hazards occurring in Cambodia. When an event such as flooding is detected or predicted, a
           voice recording is sent to the mobile phones of registered users in the areas at risk.
-          %br/
-          %a.ews-small-link{:href => ""} Read more
+          =link_to("Read more", about_path, class: "ews-small-link")
       .col-md-7.text-right
         %p
-          =image_tag  "logo-strip.png", :class =>'ews-logo-strip'
+          =image_tag  "logo-strip-2018.png", :class =>'ews-logo-strip'
 / /container
 %footer.container.text-center.footer-credits
   %p
@@ -22,4 +21,3 @@
     \-
     = link_to_if(user_signed_in?, "Dashboard", dashboard_root_path, class: "p-2 text-dark") do
       = link_to("Login", new_user_session_path, class: "p-2 text-dark")
-

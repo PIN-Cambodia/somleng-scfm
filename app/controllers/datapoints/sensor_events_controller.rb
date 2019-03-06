@@ -29,6 +29,10 @@ class Datapoints::SensorEventsController < BaseController
     if event.payload['streamHeight'].present?
       water_level = event.payload['streamHeight'].to_f
     end
+    # A bit of cleanup to avoid looking super stupid if the sensor sends wrong data
+    if(water_level < 0)
+      water_level = 0
+    end
     return water_level
   end
 end
