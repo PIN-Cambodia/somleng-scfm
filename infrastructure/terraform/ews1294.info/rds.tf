@@ -14,7 +14,7 @@ module "twilreapi_db" {
 
   db_name                    = "twilreapi_pin_production"
   username                   = "twilreapi"
-  engine_version             = "9.5.10"
+  engine_version             = "11.1"
   security_group_name        = "rds-launch-wizard-1"
   security_group_description = "Created from the RDS Management Console"
   allocated_storage          = 20
@@ -32,7 +32,7 @@ module "scfm_db" {
   instance_class    = "db.t2.small"
   identifier        = "scfm-production"
   username          = "scfm"
-  engine_version    = "10.3"
+  engine_version    = "11.1"
   allocated_storage = 5
   storage_encrypted = true
 }

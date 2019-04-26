@@ -45,7 +45,7 @@ resource "aws_security_group_rule" "cellcard" {
   from_port   = 5060
   to_port     = 5060
   protocol    = "udp"
-  cidr_blocks = ["103.193.204.17/32"]
+  cidr_blocks = ["103.193.204.26/32"]
   description = "Cellcard"
 
   security_group_id = "${aws_security_group.freeswitch.id}"
