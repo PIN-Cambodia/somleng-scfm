@@ -41,9 +41,9 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/shoulda-matchers.git
-  revision: e16960895b8ae3d43beeac741e63bb6cdb348071
+  revision: 0b23942feb1166678c85c015f875faa2edf6627c
   specs:
-    shoulda-matchers (4.0.1)
+    shoulda-matchers (4.2.0)
       activesupport (>= 4.2.0)
 
 GEM
@@ -157,7 +157,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.5)
+    concurrent-ruby (1.1.6)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.4)
@@ -233,7 +233,7 @@ GEM
     hashdiff (0.4.0)
     highline (2.0.1)
     htmlentities (4.3.4)
-    i18n (1.6.0)
+    i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     i18n-tasks (0.9.29)
       activesupport (>= 4.0.2)
@@ -295,7 +295,7 @@ GEM
     mimemagic (0.3.3)
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
-    minitest (5.11.3)
+    minitest (5.14.0)
     msgpack (1.2.10)
     multipart-post (2.1.1)
     nio4r (2.3.1)
@@ -451,7 +451,7 @@ GEM
       faraday (~> 0.9)
       jwt (>= 1.5, <= 2.5)
       nokogiri (>= 1.6, < 2.0)
-    tzinfo (1.2.5)
+    tzinfo (1.2.6)
       thread_safe (~> 0.1)
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
