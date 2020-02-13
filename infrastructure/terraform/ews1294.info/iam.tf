@@ -5,3 +5,7 @@ module "eb_iam" {
 module "s3_iam" {
   source = "../modules/s3_iam"
 }
+
+module "ci_iam" {
+  source = "../modules/ci_iam"
+}

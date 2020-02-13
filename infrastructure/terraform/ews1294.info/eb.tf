@@ -1,6 +1,6 @@
-module "eb_solution_stack" {
-  source             = "../modules/eb_solution_stacks"
-  major_ruby_version = "2.5"
+data "aws_elastic_beanstalk_solution_stack" "ruby" {
+  most_recent = true
+  name_regex  = "^64bit Amazon Linux (.*) running Ruby 2.5 \\(Puma\\)$"
 }
 
 module "scfm_eb_app" {
@@ -15,7 +15,7 @@ module "scfm_eb_app_env" {
 
   # General Settings
   app_name            = "${module.scfm_eb_app.app_name}"
-  solution_stack_name = "${module.eb_solution_stack.ruby_name}"
+  solution_stack_name = "${data.aws_elastic_beanstalk_solution_stack.ruby.name}"
   env_identifier      = "${local.scfm_identifier}"
 
   # VPC
