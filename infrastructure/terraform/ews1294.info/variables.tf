@@ -54,12 +54,6 @@ locals {
   scfm_rails_master_key    = "AQICAHh5ylDKuj3jGBOphV/NIPGWxWaKQ5XSe4/KMCjtwW8boQG5MsAC2Px9SVW8tviwVTssAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMKjKczpG9MigI5A8wAgEQgDudzZ5uuZqIOkG2vnS77/1Gg6FJQK31gIo0yC6R5ucsT4f1m4jNl/5V6hEhep7DTz18eK9Dp6+JilCXdw=="
 }
 
-variable "travis_token" {}
-
 variable "aws_region" {
   default = "ap-southeast-1"
-}
-
-variable "terraform_profile" {
-  default = "ews1294-terraform"
 }

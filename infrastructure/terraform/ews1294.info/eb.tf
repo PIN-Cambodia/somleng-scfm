@@ -1,196 +1,6 @@
-locals {
-  twilreapi_fqdn                            = "${local.twilreapi_route53_record_name}.${local.route53_domain_name}"
-  twilreapi_internal_api_fqdn               = "${local.twilreapi_fqdn}/api/internal"
-  twilreapi_internal_api_credentials        = "${local.twilreapi_internal_api_http_auth_user}:${local.twilreapi_internal_api_http_auth_password}"
-  twilreapi_db_host                         = "postgres://${module.twilreapi_db.db_username}:${module.twilreapi_db.db_password}@${module.twilreapi_db.db_instance_endpoint}/${module.twilreapi_db.db_instance_name}"
-  twilreapi_internal_api_http_auth_password = "${data.aws_ssm_parameter.twilreapi_rails_internal_api_http_auth_password.value}"
-  twilreapi_rails_master_key                = "${data.aws_ssm_parameter.twilreapi_rails_master_key.value}"
-}
-
-locals {
-  somleng_adhearsion_drb_host               = "druby://${module.route53_record_somleng_adhearsion.fqdn}:${local.somleng_adhearsion_drb_port}"
-  somleng_freeswitch_xmpp_host              = "${module.route53_record_somleng_freeswitch.fqdn}"
-  somleng_freeswitch_mod_rayo_password      = "${data.aws_ssm_parameter.freeswitch_mod_rayo_password.value}"
-  somleng_freeswitch_mod_rayo_shared_secret = "${data.aws_ssm_parameter.freeswitch_mod_rayo_shared_secret.value}"
-}
-
 module "eb_solution_stack" {
   source             = "../modules/eb_solution_stacks"
   major_ruby_version = "2.5"
-}
-
-module "twilreapi_eb_app" {
-  source = "../modules/eb_app"
-
-  app_identifier   = "${local.twilreapi_identifier}"
-  service_role_arn = "${module.eb_iam.eb_service_role_arn}"
-}
-
-module "twilreapi_eb_app_env" {
-  source = "../modules/eb_app_env"
-
-  # General Settings
-  app_name            = "${module.twilreapi_eb_app.app_name}"
-  solution_stack_name = "${module.eb_solution_stack.ruby_name}"
-  env_identifier      = "${local.twilreapi_identifier}"
-
-  # VPC
-  vpc_id      = "${module.pin_vpc.vpc_id}"
-  ec2_subnets = "${module.pin_vpc.private_subnets}"
-  elb_subnets = "${module.pin_vpc.public_subnets}"
-
-  # EC2 Settings
-  security_groups   = ["${module.twilreapi_db.security_group}"]
-  ec2_instance_role = "${module.eb_iam.eb_ec2_instance_role}"
-
-  # Elastic Beanstalk Environment
-  service_role = "${module.eb_iam.eb_service_role}"
-
-  # Listener
-  ssl_certificate_id = "${data.aws_acm_certificate.ews1294.arn}"
-
-  # ENV Vars
-  ## Defaults
-  aws_region = "${var.aws_region}"
-
-  ## Rails Specific
-  rails_master_key = "${local.twilreapi_rails_master_key}"
-  database_url     = "${local.twilreapi_db_host}"
-  db_pool          = "${local.rails_db_pool}"
-
-  ## Application Specific
-  s3_access_key_id     = "${module.s3_iam.s3_access_key_id}"
-  s3_secret_access_key = "${module.s3_iam.s3_secret_access_key}"
-  uploads_bucket       = "${aws_s3_bucket.cdr.id}"
-  default_url_host     = "https://${local.twilreapi_fqdn}"
-  smtp_username        = "${module.ses.smtp_username}"
-  smtp_password        = "${module.ses.smtp_password}"
-
-  ### Twilreapi Specific
-  outbound_call_drb_uri                     = "${local.somleng_adhearsion_drb_host}"
-  initiate_outbound_call_queue_url          = "${module.twilreapi_eb_outbound_call_worker_env.aws_sqs_queue_url}"
-  twilreapi_internal_api_http_auth_user     = "${local.twilreapi_internal_api_http_auth_user}"
-  twilreapi_internal_api_http_auth_password = "${local.twilreapi_internal_api_http_auth_password}"
-}
-
-module "twilreapi_eb_outbound_call_worker_env" {
-  source = "../modules/eb_env"
-
-  # General Settings
-  app_name            = "${module.twilreapi_eb_app.app_name}"
-  solution_stack_name = "${module.eb_solution_stack.ruby_name}"
-  env_identifier      = "${local.twilreapi_identifier}-caller"
-  tier                = "Worker"
-
-  # VPC
-  vpc_id      = "${module.pin_vpc.vpc_id}"
-  ec2_subnets = "${module.pin_vpc.private_subnets}"
-  elb_subnets = "${module.pin_vpc.public_subnets}"
-
-  # EC2 Settings
-  security_groups   = ["${module.twilreapi_db.security_group}"]
-  instance_type     = "t2.nano"
-  ec2_instance_role = "${module.eb_iam.eb_ec2_instance_role}"
-
-  # Elastic Beanstalk Environment
-  service_role = "${module.eb_iam.eb_service_role}"
-
-  # ENV Vars
-  ## Defaults
-  aws_region = "${var.aws_region}"
-
-  ## Rails Specific
-  rails_env        = "production"
-  rails_master_key = "${local.twilreapi_rails_master_key}"
-  database_url     = "${local.twilreapi_db_host}"
-  db_pool          = "${local.rails_db_pool}"
-
-  ## Application Specific
-  s3_access_key_id            = "${module.s3_iam.s3_access_key_id}"
-  s3_secret_access_key        = "${module.s3_iam.s3_secret_access_key}"
-  uploads_bucket              = "${aws_s3_bucket.cdr.id}"
-  process_active_elastic_jobs = "true"
-  default_url_host            = "https://${local.twilreapi_fqdn}"
-  smtp_username               = "${module.ses.smtp_username}"
-  smtp_password               = "${module.ses.smtp_password}"
-
-  ### Twilreapi Specific
-  outbound_call_drb_uri = "${local.somleng_adhearsion_drb_host}"
-}
-
-module "twilreapi_deploy" {
-  source = "../modules/deploy"
-
-  eb_env_id    = "${module.twilreapi_eb_app_env.web_id}"
-  repo         = "${local.twilreapi_deploy_repo}"
-  branch       = "${local.twilreapi_deploy_branch}"
-  travis_token = "${var.travis_token}"
-}
-
-module "somleng_adhearsion_eb_app" {
-  source = "../modules/eb_app"
-
-  app_identifier   = "${local.somleng_adhearsion_identifier}"
-  service_role_arn = "${module.eb_iam.eb_service_role_arn}"
-}
-
-module "somleng_adhearsion_webserver" {
-  source = "../modules/eb_env"
-
-  # General Settings
-  app_name            = "${module.somleng_adhearsion_eb_app.app_name}"
-  solution_stack_name = "${module.eb_solution_stack.multi_container_docker_name}"
-  env_identifier      = "${local.somleng_adhearsion_identifier}"
-  tier                = "WebServer"
-
-  # VPC
-  vpc_id      = "${module.pin_vpc.vpc_id}"
-  elb_subnets = "${module.pin_vpc.intra_subnets}"
-  ec2_subnets = "${module.pin_vpc.private_subnets}"
-  elb_scheme  = "internal"
-
-  # EC2 Settings
-  instance_type     = "t2.small"
-  ec2_instance_role = "${module.eb_iam.eb_ec2_instance_role}"
-
-  # Elastic Beanstalk Environment
-  service_role       = "${module.eb_iam.eb_service_role}"
-  load_balancer_type = "network"
-
-  # Listener
-  default_listener_enabled = "false"
-  ssl_listener_enabled     = "false"
-
-  drb_listener_enabled = "true"
-  drb_listener_port    = "${local.somleng_adhearsion_drb_port}"
-
-  # Default Process
-  default_process_protocol = "TCP"
-  default_process_port     = "${local.somleng_adhearsion_drb_port}"
-
-  # ENV Vars
-  ## Defaults
-  aws_region = "${var.aws_region}"
-
-  # Somleng Adhearsion Specific
-  adhearsion_app                                   = "true"
-  adhearsion_env                                   = "production"
-  adhearsion_core_host                             = "${local.somleng_freeswitch_xmpp_host}"
-  adhearsion_core_port                             = "${local.somleng_freeswitch_xmpp_port}"
-  adhearsion_core_username                         = "${local.somleng_adhearsion_core_username}"
-  adhearsion_core_password                         = "${local.somleng_freeswitch_mod_rayo_password}"
-  adhearsion_drb_port                              = "${local.somleng_adhearsion_drb_port}"
-  adhearsion_twilio_rest_api_phone_calls_url       = "https://${local.twilreapi_internal_api_credentials}@${local.twilreapi_internal_api_fqdn}/phone_calls"
-  adhearsion_twilio_rest_api_phone_call_events_url = "https://${local.twilreapi_internal_api_credentials}@${local.twilreapi_internal_api_fqdn}/phone_calls/:phone_call_id/phone_call_events"
-}
-
-module "somleng_adhearsion_deploy" {
-  source = "../modules/deploy"
-
-  eb_env_id    = "${module.somleng_adhearsion_webserver.id}"
-  repo         = "${local.somleng_adhearsion_deploy_repo}"
-  branch       = "${local.somleng_adhearsion_deploy_branch}"
-  travis_token = "${var.travis_token}"
 }
 
 module "scfm_eb_app" {
@@ -231,7 +41,7 @@ module "scfm_eb_app_env" {
 
   ## Rails Specific
   rails_env        = "production"
-  rails_master_key = "${data.aws_kms_secret.this.scfm_rails_master_key}"
+  rails_master_key = "${data.aws_kms_secrets.this.plaintext.scfm_rails_master_key}"
   database_url     = "postgres://${module.scfm_db.db_username}:${module.scfm_db.db_password}@${module.scfm_db.db_instance_endpoint}/${module.scfm_db.db_instance_name}"
   db_pool          = "${local.scfm_db_pool}"
 
@@ -241,18 +51,7 @@ module "scfm_eb_app_env" {
   uploads_bucket       = "${aws_s3_bucket.uploads.id}"
   default_url_host     = "${local.scfm_url_host}"
   mailer_sender        = "${local.mailer_sender}@${local.route53_domain_name}"
-  smtp_username        = "${module.ses.smtp_username}"
-  smtp_password        = "${module.ses.smtp_password}"
 
   ### SCFM Specific
   audio_bucket = "${aws_s3_bucket.audio.id}"
-}
-
-module "scfm_deploy" {
-  source = "../modules/deploy"
-
-  eb_env_id    = "${module.scfm_eb_app_env.web_id}"
-  repo         = "${local.scfm_deploy_repo}"
-  branch       = "${local.scfm_deploy_branch}"
-  travis_token = "${var.travis_token}"
 }

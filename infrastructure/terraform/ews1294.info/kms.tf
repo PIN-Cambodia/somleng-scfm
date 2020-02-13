@@ -12,7 +12,7 @@ resource "aws_kms_alias" "master" {
   target_key_id = "${aws_kms_key.master.key_id}"
 }
 
-data "aws_kms_secret" "this" {
+data "aws_kms_secrets" "this" {
   secret {
     name    = "scfm_db_master_password"
     payload = "${local.scfm_db_master_password}"
