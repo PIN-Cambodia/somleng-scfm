@@ -3,6 +3,7 @@ class SchedulerJob < ApplicationJob
     Account.find_each do |account|
       queue_batch_operation!(account, type: BatchOperation::PhoneCallCreate)
       queue_batch_operation!(account, type: BatchOperation::PhoneCallQueue)
+      queue_batch_operation!(account, type: BatchOperation::PhoneCallQueueRemoteFetch)
     end
   end
 
