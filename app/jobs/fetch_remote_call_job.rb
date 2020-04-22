@@ -27,5 +27,6 @@ class FetchRemoteCallJob < ApplicationJob
     Somleng::Client.new(
       provider: phone_call.platform_provider
     ).api.calls(phone_call.remote_call_id).fetch
+  rescue
   end
 end
